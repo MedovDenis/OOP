@@ -81,13 +81,6 @@ public class Auto {
         int index = -1;
         int i = 0;
 
-        while(index < 0 && i < len){
-            if (models[i].getName() == name && models[i].getPrice() == price){
-                index = i;
-            }
-            i++;
-        }
-
         while(i < len){
             if (models[i].getName().equals(name) && models[i].getPrice() == price){
                 index = i;
@@ -131,7 +124,7 @@ public class Auto {
 
     class Model{
         private String name = null;
-        private double price = 0;
+        private double price = Double.NaN;
 
 //      метод для модификации значения названия модели,
         public void setName(String name){
