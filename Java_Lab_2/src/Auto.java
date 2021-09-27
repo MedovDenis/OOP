@@ -67,25 +67,63 @@ public class Auto {
         models[getCountModel() - 1] = newModel;
     }
 
-    public void delModel(String name, double price){
+    public void delModel(String name){
+        int index = findModel(name);
 
+        if (index >= 0) {
+            System.arraycopy(models, index + 1, models, index, getCountModel() - index - 1);
+            models = Arrays.copyOf(models, getCountModel() - 1);
+        }
+    }
 
+    public int findModel(String name, double price){
+        int len = getCountModel();
+        int index = -1;
+        int i = 0;
 
-        System.arraycopy(models, 1, models, 1, 1);
-        models = Arrays.copyOf(models, getCountModel() - 1);
+        while(index < 0 && i < len){
+            if (models[i].getName() == name && models[i].getPrice() == price){
+                index = i;
+            }
+            i++;
+        }
+
+        while(i < len){
+            if (models[i].getName().equals(name) && models[i].getPrice() == price){
+                index = i;
+                break;
+            }
+            i++;
+        }
+
+        return index;
+    }
+
+    public int findModel(String name){
+        int len = getCountModel();
+        int index = -1;
+        int i = 0;
+
+        while(i < len){
+            if (models[i].getName().equals(name)){
+                index = i;
+                break;
+            }
+            i++;
+        }
+
+        return index;
     }
 
 
-    public int getCountModel(){
-        return models.length;
-    }
+    public int getCountModel(){ return models.length; }
 
     public Auto(String brand, int countBrand){
         this.brand = brand;
         models = new Model[countBrand];
 
         for (int i = 0; i < countBrand; i++){
-            String name = "Model " + (i + 1);
+            String name = "Model" + (i + 1);
             double price = Math.random() * 1000000;
             models[i] = new Model(name, price);
         }
@@ -93,7 +131,7 @@ public class Auto {
 
     class Model{
         private String name = null;
-        private double price = Double.NaN;
+        private double price = 0;
 
 //      метод для модификации значения названия модели,
         public void setName(String name){

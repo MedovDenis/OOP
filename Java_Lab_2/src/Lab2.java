@@ -10,8 +10,17 @@ public class Lab2 {
             System.out.println(name);
         }
 
-        for (double price : massPrice){
-            System.out.println(price);
+//        for (double price : massPrice){
+//            System.out.println(price);
+//        }
+
+        System.out.println("");
+
+        auto.delModel("Model1");
+
+        for (String name : auto.getNameModels()){
+            System.out.println(name);
         }
+
     }
 }
