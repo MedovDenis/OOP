@@ -116,7 +116,7 @@ public class Auto {
         models = new Model[countBrand];
 
         for (int i = 0; i < countBrand; i++){
-            String name = "Model" + (i + 1);
+            String name = "Auto " + (i + 1);
             double price = Math.random() * 1000000;
             models[i] = new Model(name, price);
         }

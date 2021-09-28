@@ -1,7 +1,7 @@
 public class Lab2 {
 
     public static void main (String[] args){
-        Auto auto = new Auto("Mazda", 10);
+        Motorbike auto = new Motorbike("Mazda", 10);
 
         String massName[] = auto.getNameModels();
         double massPrice[] = auto.getPriceModels();
@@ -16,7 +16,7 @@ public class Lab2 {
 
         System.out.println("");
 
-        auto.delModel("Model1");
+        auto.delModel("Moto 4");
 
         for (String name : auto.getNameModels()){
             System.out.println(name);
