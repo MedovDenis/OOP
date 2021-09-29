@@ -29,15 +29,14 @@ public class Motorbike {
 
     public double getPriceModel(String name){
         Model model = head.next;
-        double price = Double.NaN;
 
         while (model != head){
             if (model.name.equals(name)){
-                price = model.price;
-                break;
+                return model.price;
             }
         }
-        return price;
+
+        return Double.NaN;
     }
 
     //  метод для модификации значения цены модели по её названию,
@@ -78,34 +77,51 @@ public class Motorbike {
 
     public int findModel(String name, double price){
         Model model = head.next;
-        int index = -1;
         int i = 0;
         while (model != head){
             if (model.name.equals(name) && model.price == price){
-                index = i;
-                break;
+                return i;
             }
             model = model.next;
             i++;
         }
-        return index;
+        return -1;
     }
 
     public int findModel(String name){
         Model model = head.next;
-        int index = -1;
         int i = 0;
         while (model != head){
             if (model.name.equals(name)){
-                index = i;
+                return i;
+            }
+            model = model.next;
+            i++;
+        }
+        return -1;
+    }
+
+    public void appendModel(Model model){
+        model.next = head.next;
+        model.prev = head;
+        head.next.prev = model;
+        head.next = model;
+    }
+
+    public void popModel(int index){
+        Model model = head.next;
+        int i = 0;
+
+        while (model != head){
+            if (index == i){
+                model.next.prev = model.prev;
+                model.prev.next = model.next;
                 break;
             }
             model = model.next;
             i++;
         }
-        return index;
     }
-
 
     public int getCountModel(){
         int count = 0;
@@ -130,35 +146,6 @@ public class Motorbike {
         }
     }
 
-    public void appendModel(Model model){
-        model.next = head.next;
-        model.prev = head;
-        head.next = model;
-
-        if (head.prev == head){
-            head.prev = model;
-        }
-    }
-
-    public void popModel(int index){
-        Model model = head.next;
-        int i = 0;
-
-        while (model != head){
-            if (index == i){
-                Model nextModel = model.next;
-                Model prevModel = model.prev;
-                nextModel.prev = prevModel;
-                prevModel.next = nextModel;
-                break;
-            }
-            model = model.next;
-            i++;
-        }
-
-//        return model;
-    }
-
     private class Model{
         String name = null;
         double price = Double.NaN;
@@ -172,7 +159,4 @@ public class Motorbike {
             this.price = price;
         }
     }
-
-
-
 }

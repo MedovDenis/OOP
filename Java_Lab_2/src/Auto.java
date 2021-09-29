@@ -78,34 +78,30 @@ public class Auto {
 
     public int findModel(String name, double price){
         int len = getCountModel();
-        int index = -1;
         int i = 0;
 
         while(i < len){
             if (models[i].getName().equals(name) && models[i].getPrice() == price){
-                index = i;
-                break;
+                return i;
             }
             i++;
         }
 
-        return index;
+        return -1;
     }
 
     public int findModel(String name){
         int len = getCountModel();
-        int index = -1;
         int i = 0;
 
         while(i < len){
             if (models[i].getName().equals(name)){
-                index = i;
-                break;
+                return i;
             }
             i++;
         }
 
-        return index;
+        return -1;
     }
 
 

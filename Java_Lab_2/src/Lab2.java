@@ -10,9 +10,9 @@ public class Lab2 {
             System.out.println(name);
         }
 
-//        for (double price : massPrice){
-//            System.out.println(price);
-//        }
+        for (double price : massPrice){
+            System.out.println(price);
+        }
 
         System.out.println("");
 
