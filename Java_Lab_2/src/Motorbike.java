@@ -1,9 +1,8 @@
 import java.util.Arrays;
 
-public class Motorbike implements Transports {
+public class Motorbike implements Transport {
 
     private String brand;
-//    private int size = 0;
     private Model head = new Model();{
         head.prev = head;
         head.next = head;
@@ -27,26 +26,30 @@ public class Motorbike implements Transports {
         return nameModels;
     }
 
-    public double getPriceModel(String name){
+    public double getPriceModel(String name) throws NoSuchModelNameException{
         Model model = head.next;
 
         while (model != head){
             if (model.name.equals(name)){
                 return model.price;
             }
+            model = model.next;
         }
-
-        return Double.NaN;
+        throw new NoSuchModelNameException(name);
     }
 
     //  метод для модификации значения цены модели по её названию,
-    public void setPriceModel(String name, double price){
+    public void setPriceModel(String name, double price) throws NoSuchModelNameException{
         Model model = head.next;
         while (model != head){
             if (model.name.equals(name)){
                 model.price = price;
                 break;
             }
+            model = model.next;
+        }
+        if(model == head){
+            throw new NoSuchModelNameException(name);
         }
     }
 
@@ -65,14 +68,25 @@ public class Motorbike implements Transports {
         return priceModels;
     }
 
-    public void addModel(String name, double price){
+    public void addModel(String name, double price) throws DuplicateModelNameException{
         Model model = new Model(name, price);
-        appendModel(model);
+        if(findModel(name) != -1){
+            appendModel(model);
+        }
+        else {
+            throw new DuplicateModelNameException(name);
+        }
     }
 
-    public void delModel(String name){
+    public void delModel(String name) throws NoSuchModelNameException{
         int index = findModel(name);
-        popModel(index);
+        if (findModel(name) != -1){
+            popModel(index);
+        }
+        else{
+            throw new NoSuchModelNameException(name);
+        }
+
     }
 
     public int findModel(String name, double price){
@@ -102,10 +116,12 @@ public class Motorbike implements Transports {
     }
 
     public void appendModel(Model model){
-        model.next = head.next;
-        model.prev = head;
-        head.next.prev = model;
-        head.next = model;
+        if (model != null) {
+            model.next = head.next;
+            model.prev = head;
+            head.next.prev = model;
+            head.next = model;
+        }
     }
 
     public void popModel(int index){

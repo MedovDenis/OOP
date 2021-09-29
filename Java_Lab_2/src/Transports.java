@@ -1,26 +1,22 @@
-import java.util.Arrays;
+public class Transports {
 
-public interface Transports {
-    String getBrand();
+    public static double getAveragePrice (Transport transport){
+        double[] price = transport.getPriceModels();
+        double avarage = 0;
 
-    void setBrand(String brand);
+        for( double p : price ){
+            avarage += p;
+        }
+        return avarage / price.length;
+    }
 
-    String[] getNameModels();
+    public static void printModels (Transport transport){
+        String[] name = transport.getNameModels();
+        double[] price = transport.getPriceModels();
 
-    double getPriceModel(String name) throws NoSuchModelNameException;
+        for(int i = 0; i < price.length; i++ ){
+            System.out.println(name[i] + " : " + price[i]);
+        }
+    }
 
-    public void setPriceModel(String name, double price) throws NoSuchModelNameException;
-
-    public double[] getPriceModels();
-
-    public void addModel(String name, double price) throws DuplicateModelNameException;
-
-    public void delModel(String name) throws NoSuchModelNameException;
-
-    public int findModel(String name, double price);
-
-    public int findModel(String name);
-
-    public int getCountModel();
 }
-

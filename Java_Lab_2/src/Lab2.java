@@ -1,7 +1,7 @@
 public class Lab2 {
 
     public static void main (String[] args){
-        Motorbike auto = new Motorbike("Mazda", 10);
+        Transport auto = new Motorbike("Mazda", 10);
 
         String massName[] = auto.getNameModels();
         double massPrice[] = auto.getPriceModels();
@@ -13,10 +13,11 @@ public class Lab2 {
         for (double price : massPrice){
             System.out.println(price);
         }
+        try{
+            auto.delModel("Moto 4");
+        } catch (NoSuchModelNameException noSuchModelNameException){
 
-        System.out.println("");
-
-        auto.delModel("Moto 4");
+        }
 
         for (String name : auto.getNameModels()){
             System.out.println(name);

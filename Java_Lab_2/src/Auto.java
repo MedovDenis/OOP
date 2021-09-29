@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Auto implements Transports {
+public class Auto implements Transport {
     private String brand;
     private Model[] models;
 
