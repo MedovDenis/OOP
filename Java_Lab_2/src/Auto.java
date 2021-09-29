@@ -33,6 +33,9 @@ public class Auto implements Transport {
 
 //  метод для модификации значения цены модели по её названию,
     public void setPriceModel(String name, double price) throws NoSuchModelNameException{
+        if (price < 0) {
+            throw new ModelPriceOutOfBoundsException();
+        }
         int index = findModel(name);
         if(index != -1){
             models[index].setPrice(price);
@@ -54,6 +57,9 @@ public class Auto implements Transport {
 
 //  метод для добавления модели в массив моделей
     public void addModel(String name, double price) throws DuplicateModelNameException {
+        if (price < 0) {
+            throw new ModelPriceOutOfBoundsException();
+        }
         if (findModel(name) == -1){
             models = Arrays.copyOf(models, getCountModel() + 1 );
             Model newModel = new Model(name, price);

@@ -40,6 +40,9 @@ public class Motorbike implements Transport {
 
     //  метод для модификации значения цены модели по её названию,
     public void setPriceModel(String name, double price) throws NoSuchModelNameException{
+        if (price < 0) {
+            throw new ModelPriceOutOfBoundsException();
+        }
         Model model = head.next;
         while (model != head){
             if (model.name.equals(name)){
@@ -69,8 +72,11 @@ public class Motorbike implements Transport {
     }
 
     public void addModel(String name, double price) throws DuplicateModelNameException{
+        if (price < 0) {
+            throw new ModelPriceOutOfBoundsException();
+        }
         Model model = new Model(name, price);
-        if(findModel(name) != -1){
+        if(findModel(name) == -1){
             appendModel(model);
         }
         else {
