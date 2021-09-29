@@ -8,43 +8,37 @@ public class Auto {
     public String getBrand() { return brand; }
 
 //  метод для модификации марки автомобиля
-    public void setBrand(String brand){
-        this.brand = brand;
-    }
+    public void setBrand(String brand){ this.brand = brand; }
 
 //  метод, возвращающий массив названий всех моделей
     public String[] getNameModels(){
         int len = getCountModel();
         String[] nameModels = new String[len];
-
         for (int i = 0; i < len; i++){
             nameModels[i] = models[i].getName();
         }
-
         return nameModels;
     }
 
 //  метод для получения значения цены модели по её названию
-    public double getPriceModel(String name){
-        double price = Double.NaN;
-        String[] nameModels = getNameModels();
-
-        for(int i = 0; i < getCountModel(); i++){
-            if (nameModels[i] == name){
-                price = models[i].getPrice();
-            }
+    public double getPriceModel(String name) throws NoSuchModelNameException{
+        int index = findModel(name);
+        if(index != -1){
+            return models[index].getPrice();
         }
-        return price;
+        else{
+            throw new NoSuchModelNameException(name);
+        }
     }
 
 //  метод для модификации значения цены модели по её названию,
-    public void setPriceModel(String name, double price){
-        String[] nameModels = getNameModels();
-
-        for(int i = 0; i < getCountModel(); i++){
-            if (nameModels[i] == name){
-                models[i].setPrice(price);
-            }
+    public void setPriceModel(String name, double price) throws NoSuchModelNameException{
+        int index = findModel(name);
+        if(index != -1){
+            models[index].setPrice(price);
+        }
+        else{
+            throw new NoSuchModelNameException(name);
         }
     }
 
@@ -52,58 +46,58 @@ public class Auto {
     public double[] getPriceModels(){
         int len = getCountModel();
         double[] priceModels = new double[len];
-
         for(int i = 0; i < len; i++){
             priceModels[i] = models[i].getPrice();
         }
-
         return priceModels;
     }
 
 //  метод для добавления модели в массив моделей
-    public void addModel(String name, double price){
-        models = Arrays.copyOf(models, getCountModel() + 1 );
-        Model newModel = new Model(name, price);
-        models[getCountModel() - 1] = newModel;
+    public void addModel(String name, double price) throws DuplicateModelNameException {
+        if (findModel(name) == -1){
+            models = Arrays.copyOf(models, getCountModel() + 1 );
+            Model newModel = new Model(name, price);
+            models[getCountModel() - 1] = newModel;
+        }
+        else{
+            throw new DuplicateModelNameException(name);
+        }
     }
 
-    public void delModel(String name){
+    public void delModel(String name) throws NoSuchModelNameException{
         int index = findModel(name);
-
-        if (index >= 0) {
+        if (findModel(name) != -1) {
             System.arraycopy(models, index + 1, models, index, getCountModel() - index - 1);
             models = Arrays.copyOf(models, getCountModel() - 1);
+        }
+        else{
+            throw new NoSuchModelNameException(name);
         }
     }
 
     public int findModel(String name, double price){
         int len = getCountModel();
         int i = 0;
-
         while(i < len){
             if (models[i].getName().equals(name) && models[i].getPrice() == price){
                 return i;
             }
             i++;
         }
-
         return -1;
     }
 
     public int findModel(String name){
         int len = getCountModel();
         int i = 0;
-
         while(i < len){
             if (models[i].getName().equals(name)){
                 return i;
             }
             i++;
         }
-
         return -1;
     }
-
 
     public int getCountModel(){ return models.length; }
 

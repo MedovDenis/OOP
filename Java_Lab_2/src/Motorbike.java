@@ -3,7 +3,7 @@ import java.util.Arrays;
 public class Motorbike {
 
     private String brand;
-    private int size = 0;
+//    private int size = 0;
     private Model head = new Model();{
         head.prev = head;
         head.next = head;
