@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Motorbike {
+public class Motorbike implements Transports {
 
     private String brand;
 //    private int size = 0;
