@@ -1,27 +1,11 @@
 public class Lab2 {
 
     public static void main (String[] args){
-        Transport auto = new Motorbike("Mazda", 10);
+        Transport motorbike = new Motorbike("Yamaha", 10);
+        Transport auto = new Auto("Mazda", 15);
 
-        String massName[] = auto.getNameModels();
-        double massPrice[] = auto.getPriceModels();
-
-        for (String name : massName){
-            System.out.println(name);
-        }
-
-        for (double price : massPrice){
-            System.out.println(price);
-        }
-        try{
-            auto.delModel("Moto 4");
-        } catch (NoSuchModelNameException noSuchModelNameException){
-
-        }
-
-        for (String name : auto.getNameModels()){
-            System.out.println(name);
-        }
+        Transports.printModels(motorbike);
+        Transports.printModels(auto);
 
     }
 }

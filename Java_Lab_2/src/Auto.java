@@ -107,7 +107,7 @@ public class Auto implements Transport {
 
         for (int i = 0; i < countBrand; i++){
             String name = "Auto " + (i + 1);
-            double price = Math.random() * 1000000;
+            double price =  100000 * (i + 1);
             models[i] = new Model(name, price);
         }
     }

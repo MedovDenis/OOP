@@ -14,12 +14,12 @@ public class Motorbike implements Transport {
 
     public String[] getNameModels(){
         String[] nameModels = new String[getCountModel()];
-        Model model = head.next;
+        Model model = head.prev;
 
         int i = 0;
         while (model != head){
             nameModels[i] = model.name;
-            model = model.next;
+            model = model.prev;
             i++;
         }
 
@@ -56,12 +56,12 @@ public class Motorbike implements Transport {
     //  метод для получения массива цен моделей
     public double[] getPriceModels(){
         double[] priceModels = new double[getCountModel()];
-        Model model = head.next;
+        Model model = head.prev;
 
         int i = 0;
         while (model != head){
             priceModels[i] = model.price;
-            model = model.next;
+            model = model.prev;
             i++;
         }
 
@@ -155,7 +155,7 @@ public class Motorbike implements Transport {
         this.brand = brand;
         for (int i = 0; i < countBrand; i++){
             String name = "Moto " + (i + 1);
-            double price = Math.random() * 1000000;
+            double price = 100000 * (i + 1);
 
             Model model = new Model(name, price);
             appendModel(model);
