@@ -1,5 +1,5 @@
 package Transport;
-import Interface.Transport;
+import Interface.*;
 import Exception.*;
 import java.util.Arrays;
 
@@ -7,15 +7,28 @@ public class Auto implements Transport {
     private String brand;
     private Model[] models;
 
-//  метод для получения марки автомобиля
     public String getBrand() { return brand; }
 
-//  метод для модификации марки автомобиля
+
     public void setBrand(String brand){ this.brand = brand; }
 
-//  метод, возвращающий массив названий всех моделей
+    public void setNameModel(String name, String nameNew)throws NoSuchModelNameException, DuplicateModelNameException{
+        if(findModel(nameNew) != - 1){
+            throw new DuplicateModelNameException(nameNew);
+        }
+
+        int index = findModel(name);
+        if (index == -1){
+            throw new NoSuchModelNameException(name);
+        }
+        else{
+            models[index].setName(nameNew);
+        }
+
+    }
+
     public String[] getNameModels(){
-        int len = getCountModel();
+        int len = models.length;
         String[] nameModels = new String[len];
         for (int i = 0; i < len; i++){
             nameModels[i] = models[i].getName();
@@ -23,7 +36,6 @@ public class Auto implements Transport {
         return nameModels;
     }
 
-//  метод для получения значения цены модели по её названию
     public double getPriceModel(String name) throws NoSuchModelNameException {
         int index = findModel(name);
         if(index != -1){
@@ -34,7 +46,6 @@ public class Auto implements Transport {
         }
     }
 
-//  метод для модификации значения цены модели по её названию,
     public void setPriceModel(String name, double price) throws NoSuchModelNameException {
         if (price < 0) {
             throw new ModelPriceOutOfBoundsException();
@@ -48,9 +59,8 @@ public class Auto implements Transport {
         }
     }
 
-//  метод для получения массива цен моделей
     public double[] getPriceModels(){
-        int len = getCountModel();
+        int len = models.length;
         double[] priceModels = new double[len];
         for(int i = 0; i < len; i++){
             priceModels[i] = models[i].getPrice();
@@ -58,26 +68,28 @@ public class Auto implements Transport {
         return priceModels;
     }
 
-//  метод для добавления модели в массив моделей
     public void addModel(String name, double price) throws DuplicateModelNameException {
         if (price < 0) {
             throw new ModelPriceOutOfBoundsException();
         }
         if (findModel(name) == -1){
-            models = Arrays.copyOf(models, getCountModel() + 1 );
+            models = Arrays.copyOf(models, models.length + 1 );
             Model newModel = new Model(name, price);
-            models[getCountModel() - 1] = newModel;
+            models[models.length - 1] = newModel;
         }
         else{
             throw new DuplicateModelNameException(name);
         }
     }
 
-    public void delModel(String name) throws NoSuchModelNameException {
+    public void delModel(String name, double price) throws NoSuchModelNameException {
+        if (price < 0) {
+            throw new ModelPriceOutOfBoundsException();
+        }
         int index = findModel(name);
-        if (findModel(name) != -1) {
-            System.arraycopy(models, index + 1, models, index, getCountModel() - index - 1);
-            models = Arrays.copyOf(models, getCountModel() - 1);
+        if (findModel(name, price) != -1) {
+            System.arraycopy(models, index + 1, models, index, models.length - index - 1);
+            models = Arrays.copyOf(models, models.length - 1);
         }
         else{
             throw new NoSuchModelNameException(name);
@@ -97,7 +109,7 @@ public class Auto implements Transport {
     }
 
     public int findModel(String name){
-        int len = getCountModel();
+        int len = models.length;
         int i = 0;
         while(i < len){
             if (models[i].getName().equals(name)){
@@ -115,8 +127,8 @@ public class Auto implements Transport {
         models = new Model[countBrand];
 
         for (int i = 0; i < countBrand; i++){
-            String name = "Interface.Transport.Auto " + (i + 1);
-            double price =  100000 * (i + 1);
+            String name = "Auto " + (i + 1);
+            double price = 100000 * (i + 1);
             models[i] = new Model(name, price);
         }
     }
@@ -125,22 +137,16 @@ public class Auto implements Transport {
         private String name = null;
         private double price = Double.NaN;
 
-//      метод для модификации значения названия модели,
-        public void setName(String name){
-            this.name = name;
-        }
+        public void setName(String name){ this.name = name;}
 
-//      метод для получения названия модели
         public String getName(){
             return name;
         }
 
-//      метод для модификации цены модели
         public void setPrice(double price){
             this.price = price;
         }
 
-//      метод для получения цены модели
         public double getPrice(){
             return price;
         }

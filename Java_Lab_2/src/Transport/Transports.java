@@ -1,6 +1,6 @@
 package Transport;
 
-import Interface.Transport;
+import Interface.*;
 
 public class Transports {
 

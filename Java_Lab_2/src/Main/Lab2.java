@@ -15,6 +15,29 @@ public class Lab2 {
         System.out.println("Средняя цена: " + Transports.getAveragePrice(motorbike) + "\n");
 
         try{
+            motorbike.setNameModel("Moto 5", "Moto 555");
+
+            System.out.println(motorbike.getPriceModel("Moto 555"));
+
+            motorbike.setNameModel("Moto 321", "Moto 123");
+            System.out.println(motorbike.getPriceModel("Moto 123"));
+        }
+        catch (DuplicateModelNameException | NoSuchModelNameException e){
+            System.out.println(e.getMessage()+ "\n");
+        }
+
+        try{
+            motorbike.setNameModel("Moto 555", "Moto 5");
+            System.out.println(motorbike.getPriceModel("Moto 5"));
+
+            motorbike.setNameModel("Moto 9", "Moto 8");
+            System.out.println(motorbike.getPriceModel("Moto 1"));
+        }
+        catch (DuplicateModelNameException | NoSuchModelNameException e){
+            System.out.println(e.getMessage()+ "\n");
+        }
+
+        try{
             System.out.println(motorbike.getPriceModel("Moto 1"));
             System.out.println(motorbike.getPriceModel("Moto 333"));
         }
@@ -67,8 +90,8 @@ public class Lab2 {
         }
 
         try{
-            motorbike.delModel("Moto 1");
-            motorbike.delModel("Moto 999");
+            motorbike.delModel("Moto 2", 200000);
+            motorbike.delModel("Moto 999",99900000);
         }
         catch (NoSuchModelNameException e){
             System.out.println(e.getMessage()+ "\n");
@@ -79,60 +102,83 @@ public class Lab2 {
         System.out.println("Средняя цена: " + Transports.getAveragePrice(auto)+ "\n");
 
         try{
-            System.out.println(auto.getPriceModel("Interface.Transport.Auto 1"));
-            System.out.println(auto.getPriceModel("Interface.Transport.Auto 333"));
-        }
-        catch (NoSuchModelNameException e){
-            System.out.println(e.getMessage()+ "\n");
-        }
+            auto.setNameModel("Auto 5", "Auto 555");
 
-        try{
-            auto.setPriceModel("Interface.Transport.Auto 1", 333.2);
-            System.out.println(auto.getPriceModel("Interface.Transport.Auto 1"));
+            System.out.println(auto.getPriceModel("Auto 555"));
 
-            auto.setPriceModel("Interface.Transport.Auto 333", 333.2);
-            System.out.println(auto.getPriceModel("Interface.Transport.Auto 333"));
-        }
-        catch (NoSuchModelNameException e){
-            System.out.println(e.getMessage()+ "\n");
-        }
-
-        try{
-            auto.setPriceModel("Interface.Transport.Auto 1", 444.3);
-            System.out.println(auto.getPriceModel("Interface.Transport.Auto 1"));
-
-            auto.setPriceModel("Interface.Transport.Auto 333", -321.2);
-            System.out.println(auto.getPriceModel("Interface.Transport.Auto 333"));
-        }
-        catch (ModelPriceOutOfBoundsException | NoSuchModelNameException e){
-            System.out.println(e.getMessage()+ "\n");
-        }
-
-        try{
-            auto.addModel("Interface.Transport.Auto 333", 333.2);
-            System.out.println(auto.getPriceModel("Interface.Transport.Auto 1"));
-
-            auto.addModel("Interface.Transport.Auto 1", 444.3);
-            System.out.println(auto.getPriceModel("Interface.Transport.Auto 1"));
+            auto.setNameModel("Auto 321", "Auto 123");
+            System.out.println(auto.getPriceModel("Auto 123"));
         }
         catch (DuplicateModelNameException | NoSuchModelNameException e){
             System.out.println(e.getMessage()+ "\n");
         }
 
         try{
-            auto.addModel("Interface.Transport.Auto 444", 333.2);
-            System.out.println(auto.getPriceModel("Interface.Transport.Auto 444"));
+            auto.setNameModel("Auto 555", "Auto 5");
+            System.out.println(auto.getPriceModel("Auto 5"));
 
-            auto.setPriceModel("Interface.Transport.Auto 888", -444.3);
-            System.out.println(auto.getPriceModel("Interface.Transport.Auto 888"));
+            auto.setNameModel("Auto 321", "Auto 1");
+            System.out.println(auto.getPriceModel("Auto 1"));
+        }
+        catch (DuplicateModelNameException | NoSuchModelNameException e){
+            System.out.println(e.getMessage()+ "\n");
+        }
+
+        try{
+            System.out.println(auto.getPriceModel("Auto 1"));
+            System.out.println(auto.getPriceModel("Auto 333"));
+        }
+        catch (NoSuchModelNameException e){
+            System.out.println(e.getMessage()+ "\n");
+        }
+
+        try{
+            auto.setPriceModel("Auto 1", 333.2);
+            System.out.println(auto.getPriceModel("Auto 1"));
+
+            auto.setPriceModel("Auto 333", 333.2);
+            System.out.println(auto.getPriceModel("Auto 333"));
+        }
+        catch (NoSuchModelNameException e){
+            System.out.println(e.getMessage()+ "\n");
+        }
+
+        try{
+            auto.setPriceModel("Auto 1", 444.3);
+            System.out.println(auto.getPriceModel("Auto 1"));
+
+            auto.setPriceModel("Auto 333", -321.2);
+            System.out.println(auto.getPriceModel("Auto 333"));
+        }
+        catch (ModelPriceOutOfBoundsException | NoSuchModelNameException e){
+            System.out.println(e.getMessage()+ "\n");
+        }
+
+        try{
+            auto.addModel("Auto 333", 333.2);
+            System.out.println(auto.getPriceModel("Auto 1"));
+
+            auto.addModel("Auto 1", 444.3);
+            System.out.println(auto.getPriceModel("Auto 1"));
+        }
+        catch (DuplicateModelNameException | NoSuchModelNameException e){
+            System.out.println(e.getMessage()+ "\n");
+        }
+
+        try{
+            auto.addModel("Auto 444", 333.2);
+            System.out.println(auto.getPriceModel("Auto 444"));
+
+            auto.setPriceModel("Auto 888", -444.3);
+            System.out.println(auto.getPriceModel("Auto 888"));
         }
         catch (DuplicateModelNameException | NoSuchModelNameException | ModelPriceOutOfBoundsException e){
             System.out.println(e.getMessage()+ "\n");
         }
 
         try{
-            auto.delModel("Interface.Transport.Auto 1");
-            auto.delModel("Interface.Transport.Auto 999");
+            auto.delModel("Auto 2", 200000);
+            auto.delModel("Auto 999", 99900000.0);
         }
         catch (NoSuchModelNameException e){
             System.out.println(e.getMessage()+ "\n");

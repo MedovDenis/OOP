@@ -1,11 +1,12 @@
 package Transport;
-import Interface.Transport;
+import Interface.*;
 import Exception.*;
 
 public class Motorbike implements Transport {
 
     private String brand;
-    private Model head = new Model();{
+    private int size = 0;
+    private Model head = new Model(null, Double.NaN);{
         head.prev = head;
         head.next = head;
     }
@@ -14,8 +15,28 @@ public class Motorbike implements Transport {
 
     public void setBrand(String brand){ this.brand = brand; }
 
+    public void setNameModel(String name, String nameNew)throws NoSuchModelNameException, DuplicateModelNameException{
+        if(findModel(nameNew) != - 1){
+            throw new DuplicateModelNameException(nameNew);
+        }
+
+        if (findModel(name) == -1){
+            throw new NoSuchModelNameException(name);
+        }
+        else{
+            Model model = head.next;
+            while (model.next != head){
+                if (model.name.equals(name)){
+                    model.name = nameNew;
+                    return;
+                }
+                model = model.next;
+            }
+        }
+    }
+
     public String[] getNameModels(){
-        String[] nameModels = new String[getCountModel()];
+        String[] nameModels = new String[size];
         Model model = head.prev;
 
         int i = 0;
@@ -49,7 +70,7 @@ public class Motorbike implements Transport {
         while (model != head){
             if (model.name.equals(name)){
                 model.price = price;
-                break;
+                return;
             }
             model = model.next;
         }
@@ -60,7 +81,7 @@ public class Motorbike implements Transport {
 
     //  метод для получения массива цен моделей
     public double[] getPriceModels(){
-        double[] priceModels = new double[getCountModel()];
+        double[] priceModels = new double[size];
         Model model = head.prev;
 
         int i = 0;
@@ -80,15 +101,19 @@ public class Motorbike implements Transport {
         Model model = new Model(name, price);
         if(findModel(name) == -1){
             appendModel(model);
+
         }
         else {
             throw new DuplicateModelNameException(name);
         }
     }
 
-    public void delModel(String name) throws NoSuchModelNameException {
+    public void delModel(String name, double price) throws NoSuchModelNameException {
+        if (price < 0) {
+            throw new ModelPriceOutOfBoundsException();
+        }
         int index = findModel(name);
-        if (findModel(name) != -1){
+        if (findModel(name, price) != -1){
             popModel(index);
         }
         else{
@@ -129,6 +154,7 @@ public class Motorbike implements Transport {
             model.prev = head;
             head.next.prev = model;
             head.next = model;
+            size ++;
         }
     }
 
@@ -140,7 +166,8 @@ public class Motorbike implements Transport {
             if (index == i){
                 model.next.prev = model.prev;
                 model.prev.next = model.next;
-                break;
+                size --;
+                return;
             }
             model = model.next;
             i++;
@@ -148,15 +175,15 @@ public class Motorbike implements Transport {
     }
 
     public int getCountModel(){
-        int count = 0;
-        Model models = head.next;
-
-        while(models != head){
-            models = models.next;
-            count ++;
-        }
-
-        return count;
+//        int count = 0;
+//        Model models = head.next;
+//
+//        while(models != head){
+//            models = models.next;
+//            count ++;
+//        }
+//        size = count;
+        return size;
     }
 
     public Motorbike(String brand, int countBrand){
@@ -175,8 +202,6 @@ public class Motorbike implements Transport {
         double price = Double.NaN;
         Model prev = null;
         Model next = null;
-
-        public Model(){}
 
         public Model(String name, double price){
             this.name = name;
