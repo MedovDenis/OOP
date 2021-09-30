@@ -1,3 +1,5 @@
+package Exception;
+
 public class NoSuchModelNameException extends Exception {
     public String nameModel;
 

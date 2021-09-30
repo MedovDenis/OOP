@@ -1,13 +1,17 @@
+package Transport;
+
+import Interface.Transport;
+
 public class Transports {
 
     public static double getAveragePrice (Transport transport){
         double[] price = transport.getPriceModels();
-        double avarage = 0;
+        double mean = 0;
 
         for( double p : price ){
-            avarage += p;
+            mean += p;
         }
-        return avarage / price.length;
+        return mean / price.length;
     }
 
     public static void printNameModels (Transport transport){

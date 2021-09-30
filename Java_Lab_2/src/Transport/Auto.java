@@ -1,3 +1,6 @@
+package Transport;
+import Interface.Transport;
+import Exception.*;
 import java.util.Arrays;
 
 public class Auto implements Transport {
@@ -21,7 +24,7 @@ public class Auto implements Transport {
     }
 
 //  метод для получения значения цены модели по её названию
-    public double getPriceModel(String name) throws NoSuchModelNameException{
+    public double getPriceModel(String name) throws NoSuchModelNameException {
         int index = findModel(name);
         if(index != -1){
             return models[index].getPrice();
@@ -32,7 +35,7 @@ public class Auto implements Transport {
     }
 
 //  метод для модификации значения цены модели по её названию,
-    public void setPriceModel(String name, double price) throws NoSuchModelNameException{
+    public void setPriceModel(String name, double price) throws NoSuchModelNameException {
         if (price < 0) {
             throw new ModelPriceOutOfBoundsException();
         }
@@ -70,7 +73,7 @@ public class Auto implements Transport {
         }
     }
 
-    public void delModel(String name) throws NoSuchModelNameException{
+    public void delModel(String name) throws NoSuchModelNameException {
         int index = findModel(name);
         if (findModel(name) != -1) {
             System.arraycopy(models, index + 1, models, index, getCountModel() - index - 1);
@@ -112,7 +115,7 @@ public class Auto implements Transport {
         models = new Model[countBrand];
 
         for (int i = 0; i < countBrand; i++){
-            String name = "Auto " + (i + 1);
+            String name = "Interface.Transport.Auto " + (i + 1);
             double price =  100000 * (i + 1);
             models[i] = new Model(name, price);
         }

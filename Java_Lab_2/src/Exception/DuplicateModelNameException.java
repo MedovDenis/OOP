@@ -1,3 +1,5 @@
+package Exception;
+
 public class DuplicateModelNameException extends Exception {
     public String nameModel;
 

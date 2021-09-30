@@ -1,4 +1,6 @@
-import java.util.Arrays;
+package Transport;
+import Interface.Transport;
+import Exception.*;
 
 public class Motorbike implements Transport {
 
@@ -26,7 +28,7 @@ public class Motorbike implements Transport {
         return nameModels;
     }
 
-    public double getPriceModel(String name) throws NoSuchModelNameException{
+    public double getPriceModel(String name) throws NoSuchModelNameException {
         Model model = head.next;
 
         while (model != head){
@@ -39,7 +41,7 @@ public class Motorbike implements Transport {
     }
 
     //  метод для модификации значения цены модели по её названию,
-    public void setPriceModel(String name, double price) throws NoSuchModelNameException{
+    public void setPriceModel(String name, double price) throws NoSuchModelNameException {
         if (price < 0) {
             throw new ModelPriceOutOfBoundsException();
         }
@@ -71,7 +73,7 @@ public class Motorbike implements Transport {
         return priceModels;
     }
 
-    public void addModel(String name, double price) throws DuplicateModelNameException{
+    public void addModel(String name, double price) throws DuplicateModelNameException {
         if (price < 0) {
             throw new ModelPriceOutOfBoundsException();
         }
@@ -84,7 +86,7 @@ public class Motorbike implements Transport {
         }
     }
 
-    public void delModel(String name) throws NoSuchModelNameException{
+    public void delModel(String name) throws NoSuchModelNameException {
         int index = findModel(name);
         if (findModel(name) != -1){
             popModel(index);
