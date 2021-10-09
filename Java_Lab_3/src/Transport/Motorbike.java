@@ -6,10 +6,14 @@ public class Motorbike implements Transport {
 
     private String brand;
     private int size = 0;
-    private Model head = new Model(null, Double.NaN);{
+    private Model head = new Model(null, Double.NaN);
+    private final String type = "Motorbike";
+    {
         head.prev = head;
         head.next = head;
     }
+
+    public  String getType(){return  type;}
 
     public String getBrand() { return brand; }
 
@@ -184,6 +188,10 @@ public class Motorbike implements Transport {
 //        }
 //        size = count;
         return size;
+    }
+
+    public Motorbike(String brand){
+        this.brand = brand;
     }
 
     public Motorbike(String brand, int countBrand){

@@ -2,6 +2,10 @@ package Main;
 import Interface.*;
 import Transport.*;
 import Exception.*;
+import com.sun.source.tree.TryTree;
+
+import java.io.*;
+import java.net.StandardSocketOptions;
 
 public class Main {
 
@@ -10,6 +14,52 @@ public class Main {
         Transport motorbike = new Motorbike("Yamaha", 10);
         Transport auto = new Auto("Mazda", 15);
 
+        File file = new File("file");
+
+        OutputStream out;
+        try {
+            if (file == null){
+                out = System.out;
+            }
+            else {
+                out = new FileOutputStream(file);
+            }
+
+            Transports.outputTransport(auto, out);
+
+            out.close();
+        }
+        catch (IOException e){
+            System.out.println(e);
+        }
+        catch (NoSuchModelNameException e){
+            System.out.println(e);
+        }
+
+        InputStream in;
+        try{
+            if (file ==  null){
+                in = System.in;
+            }
+            else {
+                in = new FileInputStream(file);
+            }
+
+            Transport transport = Transports.inputTransport(in);
+
+            System.out.println(transport.getBrand());
+            Transports.printModels(transport);
+
+            in.close();
+        }
+        catch (IOException e){
+            System.out.println(e);
+        }
+        catch (DuplicateModelNameException e){
+            System.out.println(e);
+        }
+
+        /*
         System.out.println("Транспорт:" + motorbike.getBrand() + "\n");
         Transports.printModels(motorbike);
         System.out.println("Средняя цена: " + Transports.getAveragePrice(motorbike) + "\n");
@@ -183,6 +233,7 @@ public class Main {
         catch (NoSuchModelNameException e){
             System.out.println(e.getMessage()+ "\n");
         }
+         */
 
 
     }

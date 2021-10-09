@@ -4,6 +4,9 @@ import Exception.*;
 import java.util.Arrays;
 
 public interface Transport {
+
+    String getType();
+
     String getBrand();
 
     void setBrand(String brand);

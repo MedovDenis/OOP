@@ -1,6 +1,9 @@
 package Transport;
 
 import Interface.*;
+import Exception.*;
+
+import java.io.*;
 
 public class Transports {
 
@@ -37,6 +40,91 @@ public class Transports {
         for(int i = 0; i < price.length; i++ ){
             System.out.println(name[i] + " : " + price[i]);
         }
+    }
+
+    public static void outputTransport (Transport v, OutputStream out)
+            throws IOException, NoSuchModelNameException{
+        //if(out == null) throw new IOException();
+
+        DataOutputStream dataOutputStream = new DataOutputStream(out);
+
+        byte[] type = v.getType().getBytes();
+        dataOutputStream.writeInt(type.length);
+        dataOutputStream.write(type);
+
+        byte[] brand = v.getBrand().getBytes();
+        dataOutputStream.writeInt(brand.length);
+        dataOutputStream.write(brand);
+
+        dataOutputStream.writeInt(v.getCountModel());
+
+        for(String modelName : v.getNameModels()){
+            byte[]  name = modelName.getBytes();
+            dataOutputStream.writeInt(name.length);
+            dataOutputStream.write(name);
+
+            dataOutputStream.writeDouble(v.getPriceModel(modelName));
+        }
+
+        dataOutputStream.close();
+    }
+
+    public static Transport inputTransport (InputStream in)
+            throws IOException, DuplicateModelNameException{
+        //if(in == null) throw new IOException();
+
+        Transport transport = null;
+        DataInputStream dataInputStream = new DataInputStream(in);
+
+        int typeLength = dataInputStream.readInt();
+        byte[] type = new byte[typeLength];
+
+        for (int i = 0; i < typeLength; i++){
+            type[i] = dataInputStream.readByte();
+        }
+
+        int brandLength = dataInputStream.readInt();
+        byte[] brand = new byte[brandLength];
+
+        for (int i = 0; i < brandLength; i++){
+            brand[i] = dataInputStream.readByte();
+        }
+
+        switch (new String(type)){
+            case "Auto":
+                transport = new Auto(new String(brand));
+                break;
+            case "Motorbike":
+                transport = new Motorbike(new String(brand));
+                break;
+        }
+
+        int countModels = dataInputStream.readInt();
+        for(int i = 0; i < countModels; i++){
+            int nameLength = dataInputStream.readInt();
+            byte[] name = new byte[nameLength];
+            for (int j = 0; j < nameLength; j++){
+                name[j] = dataInputStream.readByte();
+            }
+
+            double price = dataInputStream.readDouble();
+
+            transport.addModel(new String(name), price);
+        }
+
+        dataInputStream.close();
+        return transport;
+    }
+
+    public static void writeTransport (Transport v, Writer out){
+
+    }
+
+    public static Transport readTransport (Reader in){
+        Transport transport = null;
+
+
+        return transport;
     }
 
 }

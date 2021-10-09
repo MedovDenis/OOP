@@ -6,9 +6,11 @@ import java.util.Arrays;
 public class Auto implements Transport {
     private String brand;
     private Model[] models;
+    private final String type = "Auto";
+
+    public String getType() {return type;}
 
     public String getBrand() { return brand; }
-
 
     public void setBrand(String brand){ this.brand = brand; }
 
@@ -131,6 +133,11 @@ public class Auto implements Transport {
             double price = 100000 * (i + 1);
             models[i] = new Model(name, price);
         }
+    }
+
+    public Auto(String brand){
+        this.brand = brand;
+        models = new Model[0];
     }
 
     class Model{
