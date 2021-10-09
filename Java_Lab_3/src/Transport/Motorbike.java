@@ -2,8 +2,10 @@ package Transport;
 import Interface.*;
 import Exception.*;
 
-public class Motorbike implements Transport {
+import java.io.Serializable;
 
+public class Motorbike implements Transport, Serializable {
+    private static final long serialVersionUID = 1;
     private String brand;
     private int size = 0;
     private Model head = new Model(null, Double.NaN);
@@ -205,7 +207,7 @@ public class Motorbike implements Transport {
         }
     }
 
-    private class Model{
+    private class Model implements Serializable{
         String name = null;
         double price = Double.NaN;
         Model prev = null;

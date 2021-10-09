@@ -101,7 +101,29 @@ public class Main {
             }
         }
 
+        try{
+            FileOutputStream fileOut = new FileOutputStream(file);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOut);
+            objectOutputStream.writeObject(motorbike);
+        }
+        catch (IOException e){
+            System.out.println("write " + e);
+        }
 
+        try{
+            FileInputStream fileIn = new FileInputStream(file);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileIn);
+            Transport transport = (Transport) objectInputStream.readObject();
+
+            System.out.println(transport.getBrand());
+            Transports.printModels(transport);
+
+            System.out.println("Motorbike equals: " + motorbike.equals(transport));
+            System.out.println("Auto equals: " + auto.equals(transport));
+        }
+        catch (IOException | ClassNotFoundException e){
+            System.out.println("read " + e);
+        }
 
         /*
         System.out.println("Транспорт:" + motorbike.getBrand() + "\n");

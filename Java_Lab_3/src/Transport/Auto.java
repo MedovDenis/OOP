@@ -1,9 +1,12 @@
 package Transport;
 import Interface.*;
 import Exception.*;
+
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Auto implements Transport {
+public class Auto implements Transport, Serializable {
+    private static final long serialVersionUID = 1;
     private String brand;
     private Model[] models;
     private final String type = "Auto";
@@ -140,7 +143,7 @@ public class Auto implements Transport {
         models = new Model[0];
     }
 
-    class Model{
+    class Model implements Serializable{
         private String name = null;
         private double price = Double.NaN;
 
