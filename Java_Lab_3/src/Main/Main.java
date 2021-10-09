@@ -16,48 +16,92 @@ public class Main {
 
         File file = new File("file");
 
-        OutputStream out;
+        OutputStream out = null;
         try {
-            if (file == null){
-                out = System.out;
-            }
-            else {
-                out = new FileOutputStream(file);
-            }
+            if (file == null) out = System.out;
+            else out = new FileOutputStream(file);
 
             Transports.outputTransport(auto, out);
 
             out.close();
         }
-        catch (IOException e){
+        catch (IOException | NoSuchModelNameException e){
             System.out.println(e);
         }
-        catch (NoSuchModelNameException e){
-            System.out.println(e);
+        finally {
+            try {
+                out.close();
+            }
+            catch (IOException e){
+                System.out.println(e);
+            }
         }
 
-        InputStream in;
+
+        InputStream in = null;
         try{
-            if (file ==  null){
-                in = System.in;
-            }
-            else {
-                in = new FileInputStream(file);
-            }
+            if (file ==  null) in = System.in;
+            else in = new FileInputStream(file);
 
             Transport transport = Transports.inputTransport(in);
 
             System.out.println(transport.getBrand());
             Transports.printModels(transport);
+        }
+        catch (IOException | DuplicateModelNameException e){
+            System.out.println(e);
+        }
+        finally {
+            try {
+                in.close();
+            }
+            catch (IOException e){
+                System.out.println(e);
+            }
+        }
 
-            in.close();
+
+        Writer writer = null;
+        try{
+            writer = new FileWriter(file);
+            Transports.writeTransport(motorbike, writer);
         }
-        catch (IOException e){
+        catch (IOException | NoSuchModelNameException e){
             System.out.println(e);
         }
-        catch (DuplicateModelNameException e){
+        finally {
+            try{
+                writer.close();
+            }
+            catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+
+
+        Reader reader = null;
+        try{
+            if (file == null) reader = new InputStreamReader(System.in);
+            else reader = new FileReader(file);
+
+            Transport transport = Transports.readTransport(reader);
+
+            System.out.println(transport.getBrand());
+            Transports.printModels(transport);
+        }
+        catch (IOException | DuplicateModelNameException e){
             System.out.println(e);
         }
+        finally {
+            try{
+                reader.close();
+            }
+            catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+
+
 
         /*
         System.out.println("Транспорт:" + motorbike.getBrand() + "\n");

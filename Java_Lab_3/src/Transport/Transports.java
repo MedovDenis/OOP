@@ -44,7 +44,7 @@ public class Transports {
 
     public static void outputTransport (Transport v, OutputStream out)
             throws IOException, NoSuchModelNameException{
-        //if(out == null) throw new IOException();
+        if(out == null) throw new IOException();
 
         DataOutputStream dataOutputStream = new DataOutputStream(out);
 
@@ -71,7 +71,7 @@ public class Transports {
 
     public static Transport inputTransport (InputStream in)
             throws IOException, DuplicateModelNameException{
-        //if(in == null) throw new IOException();
+        if(in == null) throw new IOException();
 
         Transport transport = null;
         DataInputStream dataInputStream = new DataInputStream(in);
@@ -116,14 +116,50 @@ public class Transports {
         return transport;
     }
 
-    public static void writeTransport (Transport v, Writer out){
+    public static void writeTransport (Transport v, Writer out)
+            throws IOException, NoSuchModelNameException{
+        if (out == null) throw new IOException();
 
+        PrintWriter printWriter = new PrintWriter(out);
+
+        printWriter.println(v.getType());
+        printWriter.println(v.getBrand());
+        printWriter.println(v.getCountModel());
+
+        for(String model : v.getNameModels()){
+            printWriter.println(model);
+            printWriter.println(v.getPriceModel(model));
+        }
+
+        printWriter.close();
     }
 
-    public static Transport readTransport (Reader in){
+    public static Transport readTransport (Reader in)
+            throws IOException, DuplicateModelNameException{
+        if(in == null) throw new IOException();
+
         Transport transport = null;
 
+        BufferedReader bufferedReader = new BufferedReader(in);
 
+        switch (bufferedReader.readLine()){
+            case "Auto":
+                transport = new Auto(bufferedReader.readLine());
+                break;
+            case "Motorbike":
+                transport = new Motorbike(bufferedReader.readLine());
+                break;
+        }
+
+        int countModels = Integer.parseInt(bufferedReader.readLine());
+
+        for(int i = 0; i < countModels; i++){
+            String nameModel = bufferedReader.readLine();
+            double price = Double.parseDouble(bufferedReader.readLine());
+            transport.addModel(nameModel, price);
+        }
+
+        bufferedReader.close();
         return transport;
     }
 
