@@ -42,31 +42,41 @@ public class Transports {
         }
     }
 
+    private static void fromStringToStraem(String data, DataOutputStream dataOutputStream)
+            throws IOException{
+        byte[] byteData = data.getBytes();
+        dataOutputStream.writeInt(byteData.length);
+        dataOutputStream.write(byteData);
+    }
+
     public static void outputTransport (Transport v, OutputStream out)
             throws IOException, NoSuchModelNameException{
         if(out == null) throw new IOException();
 
         DataOutputStream dataOutputStream = new DataOutputStream(out);
 
-        byte[] type = v.getType().getBytes();
-        dataOutputStream.writeInt(type.length);
-        dataOutputStream.write(type);
-
-        byte[] brand = v.getBrand().getBytes();
-        dataOutputStream.writeInt(brand.length);
-        dataOutputStream.write(brand);
-
+        fromStringToStraem(v.getType(), dataOutputStream);
+        fromStringToStraem(v.getBrand(), dataOutputStream);
         dataOutputStream.writeInt(v.getCountModel());
 
         for(String modelName : v.getNameModels()){
-            byte[]  name = modelName.getBytes();
-            dataOutputStream.writeInt(name.length);
-            dataOutputStream.write(name);
-
+            fromStringToStraem(modelName, dataOutputStream);
             dataOutputStream.writeDouble(v.getPriceModel(modelName));
         }
 
         dataOutputStream.close();
+    }
+
+    private static String fromStreamToString(DataInputStream dataInputStream)
+            throws IOException{
+        int length = dataInputStream.readInt();
+        byte[] data = new byte[length];
+
+        for (int i = 0; i < length; i++){
+            data[i] = dataInputStream.readByte();
+        }
+
+        return new String(data);
     }
 
     public static Transport inputTransport (InputStream in)
@@ -76,40 +86,20 @@ public class Transports {
         Transport transport = null;
         DataInputStream dataInputStream = new DataInputStream(in);
 
-        int typeLength = dataInputStream.readInt();
-        byte[] type = new byte[typeLength];
-
-        for (int i = 0; i < typeLength; i++){
-            type[i] = dataInputStream.readByte();
-        }
-
-        int brandLength = dataInputStream.readInt();
-        byte[] brand = new byte[brandLength];
-
-        for (int i = 0; i < brandLength; i++){
-            brand[i] = dataInputStream.readByte();
-        }
-
-        switch (new String(type)){
+        switch (fromStreamToString(dataInputStream)){
             case "Auto":
-                transport = new Auto(new String(brand));
+                transport = new Auto(fromStreamToString(dataInputStream));
                 break;
             case "Motorbike":
-                transport = new Motorbike(new String(brand));
+                transport = new Motorbike(fromStreamToString(dataInputStream));
                 break;
         }
 
         int countModels = dataInputStream.readInt();
         for(int i = 0; i < countModels; i++){
-            int nameLength = dataInputStream.readInt();
-            byte[] name = new byte[nameLength];
-            for (int j = 0; j < nameLength; j++){
-                name[j] = dataInputStream.readByte();
-            }
-
-            double price = dataInputStream.readDouble();
-
-            transport.addModel(new String(name), price);
+            transport.addModel(
+                    fromStreamToString(dataInputStream),
+                    dataInputStream.readDouble());
         }
 
         dataInputStream.close();
