@@ -2,10 +2,8 @@ package Main;
 import Interface.*;
 import Transport.*;
 import Exception.*;
-import com.sun.source.tree.TryTree;
 
 import java.io.*;
-import java.net.StandardSocketOptions;
 
 public class Main {
 
@@ -63,7 +61,8 @@ public class Main {
 
         Writer writer = null;
         try{
-            writer = new FileWriter(file);
+            if (file == null) writer = new OutputStreamWriter(System.out);
+            else writer = new FileWriter(file);
             Transports.writeTransport(motorbike, writer);
         }
         catch (IOException | NoSuchModelNameException e){
