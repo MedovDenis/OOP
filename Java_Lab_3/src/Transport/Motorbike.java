@@ -4,7 +4,7 @@ import Exception.*;
 
 import java.io.Serializable;
 
-public class Motorbike implements Transport, Serializable {
+public class Motorbike implements Transport {
     private static final long serialVersionUID = 1;
     private String brand;
     private int size = 0;

@@ -5,7 +5,7 @@ import Exception.*;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class Auto implements Transport, Serializable {
+public class Auto implements Transport{
     private static final long serialVersionUID = 1;
     private String brand;
     private Model[] models;

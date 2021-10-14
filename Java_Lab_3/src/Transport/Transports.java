@@ -51,7 +51,6 @@ public class Transports {
 
     public static void outputTransport (Transport v, OutputStream out)
             throws IOException, NoSuchModelNameException{
-        if(out == null) throw new IOException();
 
         DataOutputStream dataOutputStream = new DataOutputStream(out);
 
@@ -64,7 +63,7 @@ public class Transports {
             dataOutputStream.writeDouble(v.getPriceModel(modelName));
         }
 
-        dataOutputStream.close();
+        dataOutputStream.flush();
     }
 
     private static String fromStreamToString(DataInputStream dataInputStream)
@@ -81,7 +80,6 @@ public class Transports {
 
     public static Transport inputTransport (InputStream in)
             throws IOException, DuplicateModelNameException{
-        if(in == null) throw new IOException();
 
         Transport transport = null;
         DataInputStream dataInputStream = new DataInputStream(in);
@@ -101,14 +99,12 @@ public class Transports {
                     fromStreamToString(dataInputStream),
                     dataInputStream.readDouble());
         }
-
-        dataInputStream.close();
+        
         return transport;
     }
 
     public static void writeTransport (Transport v, Writer out)
             throws IOException, NoSuchModelNameException{
-        if (out == null) throw new IOException();
 
         PrintWriter printWriter = new PrintWriter(out);
 
@@ -121,12 +117,11 @@ public class Transports {
             printWriter.println(v.getPriceModel(model));
         }
 
-        printWriter.close();
+        printWriter.flush();
     }
 
     public static Transport readTransport (Reader in)
             throws IOException, DuplicateModelNameException{
-        if(in == null) throw new IOException();
 
         Transport transport = null;
 
@@ -149,7 +144,6 @@ public class Transports {
             transport.addModel(nameModel, price);
         }
 
-        bufferedReader.close();
         return transport;
     }
 

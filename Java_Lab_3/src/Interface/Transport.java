@@ -1,9 +1,10 @@
 package Interface;
 import Exception.*;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public interface Transport {
+public interface Transport extends Serializable {
 
     String getType();
 
