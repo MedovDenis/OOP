@@ -12,9 +12,12 @@ public class Main {
         Transport motorbike = new Motorbike("Yamaha", 10);
         Transport auto = new Auto("Mazda", 15);
 
-        System.out.println(motorbike.toString());
-        System.out.println(auto.toString());
+        System.out.println(motorbike.hashCode());
+        System.out.println(auto.hashCode());
 
+        Object auto2 = auto.clone();
+
+        System.out.println(auto.equals(auto2));
 //        System.out.println("Оригинал:");
 //        System.out.println(motorbike.getBrand());
 //        Transports.printModels(motorbike);

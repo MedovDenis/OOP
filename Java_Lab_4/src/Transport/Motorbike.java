@@ -180,17 +180,7 @@ public class Motorbike implements Transport {
         }
     }
 
-    public int getCountModel(){
-//        int count = 0;
-//        Model models = head.next;
-//
-//        while(models != head){
-//            models = models.next;
-//            count ++;
-//        }
-//        size = count;
-        return size;
-    }
+    public int getCountModel(){ return size; }
 
     public String toString(){
         StringBuffer stbuff = new StringBuffer();
@@ -211,18 +201,22 @@ public class Motorbike implements Transport {
     }
 
     public boolean equals(Object obj){
-
+        if( !(obj instanceof Motorbike) ) return false;
+        if( !(toString().equals(((Transport) obj).toString()))) return false;
         return true;
     }
 
     public int hashCode(){
-
-        return 0;
+        return toString().hashCode();
     }
 
     public Object clone(){
+        Object result = null;
+        try {
+            result = super.clone();
+        } catch (CloneNotSupportedException ex) { }
+        return result;
 
-        return new Object();
     }
 
     public Motorbike(String brand){

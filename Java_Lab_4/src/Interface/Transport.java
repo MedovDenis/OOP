@@ -4,7 +4,7 @@ import Exception.*;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public interface Transport extends Serializable {
+public interface Transport extends Serializable, Cloneable {
 
     String getType();
 

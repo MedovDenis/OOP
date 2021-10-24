@@ -155,18 +155,21 @@ public class Auto implements Transport{
     }
 
     public boolean equals(Object obj){
-
+        if( !(obj instanceof Auto) ) return false;
+        if( !(toString().equals(((Transport) obj).toString()))) return false;
         return true;
     }
 
     public int hashCode(){
-
-        return 0;
+        return toString().hashCode();
     }
 
     public Object clone(){
-
-        return new Object();
+        Object result = null;
+        try {
+            result = super.clone();
+        } catch (CloneNotSupportedException ex) { }
+        return result;
     }
 
     public Auto(String brand){
