@@ -28,5 +28,12 @@ public interface Transport extends Serializable {
 
     int getCountModel();
 
+    String toString();
+
+    boolean equals(Object obj);
+
+    int hashCode();
+
+    Object clone();
 }
 

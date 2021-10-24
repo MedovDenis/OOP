@@ -192,6 +192,39 @@ public class Motorbike implements Transport {
         return size;
     }
 
+    public String toString(){
+        StringBuffer stbuff = new StringBuffer();
+        stbuff.append(type);
+        stbuff.append('\n');
+        stbuff.append(brand);
+
+        String[] nameModels = getNameModels();
+        double[] priceModels = getPriceModels();
+        for(int i = 0; i < size; i ++){
+            stbuff.append('\n');
+            stbuff.append(nameModels[i]);
+            stbuff.append('\n');
+            stbuff.append(priceModels[i]);
+        }
+
+        return stbuff.toString();
+    }
+
+    public boolean equals(Object obj){
+
+        return true;
+    }
+
+    public int hashCode(){
+
+        return 0;
+    }
+
+    public Object clone(){
+
+        return new Object();
+    }
+
     public Motorbike(String brand){
         this.brand = brand;
     }

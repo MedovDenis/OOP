@@ -138,6 +138,37 @@ public class Auto implements Transport{
         }
     }
 
+    public String toString(){
+        StringBuffer stbuff = new StringBuffer();
+        stbuff.append(type);
+        stbuff.append('\n');
+        stbuff.append(brand);
+
+        for(int i = 0; i < models.length; i ++){
+            stbuff.append('\n');
+            stbuff.append(models[i].getName());
+            stbuff.append('\n');
+            stbuff.append(models[i].getPrice());
+        }
+
+        return stbuff.toString();
+    }
+
+    public boolean equals(Object obj){
+
+        return true;
+    }
+
+    public int hashCode(){
+
+        return 0;
+    }
+
+    public Object clone(){
+
+        return new Object();
+    }
+
     public Auto(String brand){
         this.brand = brand;
         models = new Model[0];
