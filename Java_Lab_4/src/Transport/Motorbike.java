@@ -3,6 +3,8 @@ import Interface.*;
 import Exception.*;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Motorbike implements Transport {
     private static final long serialVersionUID = 1;
@@ -183,40 +185,59 @@ public class Motorbike implements Transport {
     public int getCountModel(){ return size; }
 
     public String toString(){
-        StringBuffer stbuff = new StringBuffer();
-        stbuff.append(type);
-        stbuff.append('\n');
-        stbuff.append(brand);
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(type);
+        stringBuffer.append('\n');
+        stringBuffer.append(brand);
 
         String[] nameModels = getNameModels();
         double[] priceModels = getPriceModels();
-        for(int i = 0; i < size; i ++){
-            stbuff.append('\n');
-            stbuff.append(nameModels[i]);
-            stbuff.append('\n');
-            stbuff.append(priceModels[i]);
+        for(int i = 0; i < size; i++){
+            stringBuffer.append('\n');
+            stringBuffer.append(nameModels[i]);
+            stringBuffer.append('\n');
+            stringBuffer.append(priceModels[i]);
         }
-
-        return stbuff.toString();
+        return stringBuffer.toString();
     }
 
     public boolean equals(Object obj){
-        if( !(obj instanceof Motorbike) ) return false;
-        if( !(toString().equals(((Transport) obj).toString()))) return false;
-        return true;
+        if (this == obj) return true;
+        if(obj == null || !(obj instanceof Motorbike)) return false;
+        if( !(type.equals(((Motorbike) obj).getType()))) return false;
+        if( !(brand.equals(((Motorbike) obj).getBrand()))) return false;
+        return Arrays.equals(this.getNameModels(), ((Motorbike) obj).getNameModels()) &&
+                Arrays.equals(this.getPriceModels(), ((Motorbike) obj).getPriceModels());
     }
 
     public int hashCode(){
-        return toString().hashCode();
+        int hashCode = 0;
+        hashCode = Objects.hash(type, brand);
+        Model model = head.next;
+        while (model != head){
+            hashCode += model.hashCode();
+            model = model.next;
+        }
+        return hashCode;
     }
 
-    public Object clone(){
-        Object result = null;
+    public Object clone() {
+        Motorbike result = null;
         try {
-            result = super.clone();
-        } catch (CloneNotSupportedException ex) { }
-        return result;
+            result = (Motorbike) super.clone();
+            result.head = new Model(null, Double.NaN);
+            result.head.next = result.head;
+            result.head.prev = result.head;
+            result.size = 0;
 
+            String[] nameModels = getNameModels();
+            double[] priceModels = getPriceModels();
+            for(int i = 0; i < size; i++){
+                result.addModel(nameModels[i], priceModels[i]);
+            }
+        }
+        catch (CloneNotSupportedException | DuplicateModelNameException ex) {}
+        return result;
     }
 
     public Motorbike(String brand){
@@ -239,6 +260,29 @@ public class Motorbike implements Transport {
         double price = Double.NaN;
         Model prev = null;
         Model next = null;
+
+        public String toString() {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append(name);
+            stringBuffer.append('\n');
+            stringBuffer.append(price);
+            return stringBuffer.toString();
+        }
+
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || !(obj instanceof Model)) return false;
+            Model model = (Model) obj;
+            return Double.compare(model.price, price) == 0 && name.equals(model.name);
+        }
+
+        public int hashCode() {
+            return Objects.hash(name, price);
+        }
+
+        public Object clone() throws CloneNotSupportedException {
+            return (Model) super.clone();
+        }
 
         public Model(String name, double price){
             this.name = name;

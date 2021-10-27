@@ -4,6 +4,7 @@ import Exception.*;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Auto implements Transport{
     private static final long serialVersionUID = 1;
@@ -139,35 +140,45 @@ public class Auto implements Transport{
     }
 
     public String toString(){
-        StringBuffer stbuff = new StringBuffer();
-        stbuff.append(type);
-        stbuff.append('\n');
-        stbuff.append(brand);
-
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(type);
+        stringBuffer.append('\n');
+        stringBuffer.append(brand);
         for(int i = 0; i < models.length; i ++){
-            stbuff.append('\n');
-            stbuff.append(models[i].getName());
-            stbuff.append('\n');
-            stbuff.append(models[i].getPrice());
+            stringBuffer.append('\n');
+            stringBuffer.append(models[i].toString());
         }
-
-        return stbuff.toString();
+        return stringBuffer.toString();
     }
 
     public boolean equals(Object obj){
-        if( !(obj instanceof Auto) ) return false;
-        if( !(toString().equals(((Transport) obj).toString()))) return false;
+        if (this  == obj) return true;
+        if(obj == null || !(obj instanceof Auto)) return false;
+        if( !(type.equals(((Auto) obj).getType()))) return false;
+        if( !(brand.equals(((Auto) obj).getBrand()))) return false;
+        for(int i = 0; i < models.length; i++){
+            if( !(models[i].equals(((Auto) obj).models[i]) )) return false;
+        }
         return true;
     }
 
     public int hashCode(){
-        return toString().hashCode();
+        int hashCode = 0;
+        hashCode = Objects.hash(type, brand);
+        for(int i = 0; i < models.length; i++){
+            hashCode += models[i].hashCode();
+        }
+        return hashCode;
     }
 
     public Object clone(){
-        Object result = null;
+        Auto result = null;
         try {
-            result = super.clone();
+            result = (Auto) super.clone();
+            result.models = models.clone();
+            for(int i = 0; i < models.length; i++){
+                result.models[i] = (Model) models[i].clone();
+            }
         } catch (CloneNotSupportedException ex) { }
         return result;
     }
@@ -177,7 +188,7 @@ public class Auto implements Transport{
         models = new Model[0];
     }
 
-    class Model implements Serializable{
+    class Model implements Serializable, Cloneable{
         private String name = null;
         private double price = Double.NaN;
 
@@ -193,6 +204,29 @@ public class Auto implements Transport{
 
         public double getPrice(){
             return price;
+        }
+
+        public String toString() {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append(name);
+            stringBuffer.append('\n');
+            stringBuffer.append(price);
+            return stringBuffer.toString();
+        }
+
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || !(obj instanceof Model)) return false;
+            Model model = (Model) obj;
+            return Double.compare(model.price, price) == 0 && name.equals(model.name);
+        }
+
+        public int hashCode() {
+            return Objects.hash(name, price);
+        }
+
+        public Object clone() throws CloneNotSupportedException {
+            return (Model) super.clone();
         }
 
         public Model(String name, double price){
