@@ -139,6 +139,7 @@ public class Auto implements Transport{
         }
     }
 
+    @Override
     public String toString(){
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(type);
@@ -151,26 +152,23 @@ public class Auto implements Transport{
         return stringBuffer.toString();
     }
 
+    @Override
     public boolean equals(Object obj){
-        if (this  == obj) return true;
-        if(obj == null || !(obj instanceof Auto)) return false;
+        if(!(obj instanceof Auto)) return false;
         if( !(type.equals(((Auto) obj).getType()))) return false;
         if( !(brand.equals(((Auto) obj).getBrand()))) return false;
-        for(int i = 0; i < models.length; i++){
-            if( !(models[i].equals(((Auto) obj).models[i]) )) return false;
-        }
-        return true;
+        return (Arrays.equals(models, ((Auto) obj).models));
     }
 
+    @Override
     public int hashCode(){
         int hashCode = 0;
         hashCode = Objects.hash(type, brand);
-        for(int i = 0; i < models.length; i++){
-            hashCode += models[i].hashCode();
-        }
+        hashCode += Arrays.hashCode(models);
         return hashCode;
     }
 
+    @Override
     public Object clone(){
         Auto result = null;
         try {
@@ -179,7 +177,9 @@ public class Auto implements Transport{
             for(int i = 0; i < models.length; i++){
                 result.models[i] = (Model) models[i].clone();
             }
-        } catch (CloneNotSupportedException ex) { }
+        } catch (CloneNotSupportedException ex) {
+            System.out.println(ex);
+        }
         return result;
     }
 
@@ -206,6 +206,7 @@ public class Auto implements Transport{
             return price;
         }
 
+        @Override
         public String toString() {
             StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.append(name);
@@ -214,17 +215,19 @@ public class Auto implements Transport{
             return stringBuffer.toString();
         }
 
+        @Override
         public boolean equals(Object obj) {
-            if (this == obj) return true;
             if (obj == null || !(obj instanceof Model)) return false;
             Model model = (Model) obj;
             return Double.compare(model.price, price) == 0 && name.equals(model.name);
         }
 
+        @Override
         public int hashCode() {
             return Objects.hash(name, price);
         }
 
+        @Override
         public Object clone() throws CloneNotSupportedException {
             return (Model) super.clone();
         }

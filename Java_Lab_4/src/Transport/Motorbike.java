@@ -33,7 +33,7 @@ public class Motorbike implements Transport {
         }
         else{
             Model model = head.next;
-            while (model.next != head){
+            while (model != head){
                 if (model.name.equals(name)){
                     model.name = nameNew;
                     return;
@@ -184,6 +184,7 @@ public class Motorbike implements Transport {
 
     public int getCountModel(){ return size; }
 
+    @Override
     public String toString(){
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(type);
@@ -201,15 +202,16 @@ public class Motorbike implements Transport {
         return stringBuffer.toString();
     }
 
+    @Override
     public boolean equals(Object obj){
-        if (this == obj) return true;
-        if(obj == null || !(obj instanceof Motorbike)) return false;
+        if(!(obj instanceof Motorbike)) return false;
         if( !(type.equals(((Motorbike) obj).getType()))) return false;
         if( !(brand.equals(((Motorbike) obj).getBrand()))) return false;
         return Arrays.equals(this.getNameModels(), ((Motorbike) obj).getNameModels()) &&
                 Arrays.equals(this.getPriceModels(), ((Motorbike) obj).getPriceModels());
     }
 
+    @Override
     public int hashCode(){
         int hashCode = 0;
         hashCode = Objects.hash(type, brand);
@@ -221,6 +223,7 @@ public class Motorbike implements Transport {
         return hashCode;
     }
 
+    @Override
     public Object clone() {
         Motorbike result = null;
         try {
@@ -236,7 +239,9 @@ public class Motorbike implements Transport {
                 result.addModel(nameModels[i], priceModels[i]);
             }
         }
-        catch (CloneNotSupportedException | DuplicateModelNameException ex) {}
+        catch (CloneNotSupportedException | DuplicateModelNameException ex) {
+            System.out.println(ex);
+        }
         return result;
     }
 
@@ -261,6 +266,7 @@ public class Motorbike implements Transport {
         Model prev = null;
         Model next = null;
 
+        @Override
         public String toString() {
             StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.append(name);
@@ -269,17 +275,19 @@ public class Motorbike implements Transport {
             return stringBuffer.toString();
         }
 
+        @Override
         public boolean equals(Object obj) {
-            if (this == obj) return true;
             if (obj == null || !(obj instanceof Model)) return false;
             Model model = (Model) obj;
             return Double.compare(model.price, price) == 0 && name.equals(model.name);
         }
 
+        @Override
         public int hashCode() {
             return Objects.hash(name, price);
         }
 
+        @Override
         public Object clone() throws CloneNotSupportedException {
             return (Model) super.clone();
         }
