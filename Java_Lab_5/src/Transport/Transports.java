@@ -4,6 +4,8 @@ import Interface.*;
 import Exception.*;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class Transports {
 
@@ -145,6 +147,30 @@ public class Transports {
         }
 
         return transport;
+    }
+
+    public static Transport createTransport(String brand, int count, Transport transport){
+        Object res = null;
+        try{
+            Class c = transport.getClass();
+            Constructor cons = c.getConstructor(new Class[] {String.class, Integer.TYPE});
+            Integer count_ = Integer.valueOf(count);
+            res = cons.newInstance(brand, count_);
+        }
+        catch (NoSuchMethodException e) {
+            System.out.println("Метод не найден");
+        }
+        catch (IllegalAccessException e) {
+            System.out.println("Метод недоступен");
+        }
+        catch (InvocationTargetException e) {
+            System.out.println("При вызове возникло исключение");
+        }
+        catch (InstantiationException e){
+            System.out.println("Выход за границы массива");
+        }
+
+        return (Transport) res;
     }
 
 }
