@@ -6,6 +6,7 @@ import Exception.*;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Scanner;
 
 public class Transports {
 
@@ -13,10 +14,23 @@ public class Transports {
         double[] price = transport.getPriceModels();
         double mean = 0;
 
-        for( double p : price ){
+        for(double p : price ){
             mean += p;
         }
         return mean / price.length;
+    }
+
+    public static double getAvaragePriceTransports(Transport ... transports){
+        double summ = 0;
+        int count = 0;
+        for(Transport transport : transports){
+            double[] prices = transport.getPriceModels();
+            for(double price : prices){
+                summ += price;
+                count ++;
+            }
+        }
+        return summ / count;
     }
 
     public static void printNameModels (Transport transport){
@@ -116,33 +130,59 @@ public class Transports {
 
         for(String model : v.getNameModels()){
             printWriter.println(model);
-            printWriter.println(v.getPriceModel(model));
+            printWriter.printf("%2.f", v.getPriceModel(model));
         }
 
         printWriter.flush();
     }
 
+//    public static Transport readTransport (Reader in)
+//            throws IOException, DuplicateModelNameException{
+//
+//        Transport transport = null;
+//        BufferedReader bufferedReader = new BufferedReader(in);
+//
+//        switch (bufferedReader.readLine()){
+//            case "Auto":
+//                transport = new Auto(bufferedReader.readLine());
+//                break;
+//            case "Motorbike":
+//                transport = new Motorbike(bufferedReader.readLine());
+//                break;
+//        }
+//
+//        int countModels = Integer.parseInt(bufferedReader.readLine());
+//
+//        for(int i = 0; i < countModels; i++){
+//            String nameModel = bufferedReader.readLine();
+//            double price = Double.parseDouble(bufferedReader.readLine());
+//            transport.addModel(nameModel, price);
+//        }
+//
+//        return transport;
+//    }
+
     public static Transport readTransport (Reader in)
             throws IOException, DuplicateModelNameException{
 
         Transport transport = null;
+        Scanner scanner = new Scanner(in.toString());
 
-        BufferedReader bufferedReader = new BufferedReader(in);
 
-        switch (bufferedReader.readLine()){
+        switch (scanner.nextLine()){
             case "Auto":
-                transport = new Auto(bufferedReader.readLine());
+                transport = new Auto(scanner.nextLine());
                 break;
             case "Motorbike":
-                transport = new Motorbike(bufferedReader.readLine());
+                transport = new Motorbike(scanner.nextLine());
                 break;
         }
 
-        int countModels = Integer.parseInt(bufferedReader.readLine());
+        int countModels = Integer.parseInt(scanner.nextLine());
 
         for(int i = 0; i < countModels; i++){
-            String nameModel = bufferedReader.readLine();
-            double price = Double.parseDouble(bufferedReader.readLine());
+            String nameModel = scanner.nextLine();
+            double price = Double.parseDouble(scanner.nextLine());
             transport.addModel(nameModel, price);
         }
 
