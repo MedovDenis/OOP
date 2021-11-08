@@ -28,12 +28,12 @@ public interface Transport extends Serializable, Cloneable {
 
     int getCountModel();
 
-    String toString();
-
-    boolean equals(Object obj);
-
-    int hashCode();
-
-    Object clone();
+//    String toString();
+//
+//    boolean equals(Object obj);
+//
+//    int hashCode();
+//
+//    Object clone();
 }
 
