@@ -13,6 +13,7 @@ public class Main {
 
             Transport auto = new Auto("Mazda", 2);
             Transports.printModels(auto);
+            System.out.println();
 
             try{
                 Class c = Class.forName(args[0]);
@@ -37,9 +38,9 @@ public class Main {
                 System.out.println("Выход за границы массива");
             }
             Transports.printModels(auto);
+            System.out.println();
 
             Transport newAuto = Transports.createTransport("Mashinka", 5, auto);
-
             Transports.printModels(newAuto);
         }
 }
