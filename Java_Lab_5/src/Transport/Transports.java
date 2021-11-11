@@ -3,6 +3,7 @@ package Transport;
 import Interface.*;
 import Exception.*;
 
+import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -18,19 +19,6 @@ public class Transports {
             mean += p;
         }
         return mean / price.length;
-    }
-
-    public static double getAvaragePriceTransports(Transport ... transports){
-        double summ = 0;
-        int count = 0;
-        for(Transport transport : transports){
-            double[] prices = transport.getPriceModels();
-            for(double price : prices){
-                summ += price;
-                count ++;
-            }
-        }
-        return summ / count;
     }
 
     public static void printNameModels (Transport transport){
@@ -124,13 +112,13 @@ public class Transports {
 
         PrintWriter printWriter = new PrintWriter(out);
 
-        printWriter.println(v.getType());
-        printWriter.println(v.getBrand());
-        printWriter.println(v.getCountModel());
+        printWriter.printf("%s%n", v.getType());
+        printWriter.printf("%s%n", v.getBrand());
+        printWriter.printf("%d%n", v.getCountModel());
 
         for(String model : v.getNameModels()){
-            printWriter.println(model);
-            printWriter.printf("%2.f", v.getPriceModel(model));
+            printWriter.printf("%s%n", model);
+            printWriter.printf("%.2f%n", v.getPriceModel(model));
         }
 
         printWriter.flush();
@@ -166,8 +154,7 @@ public class Transports {
             throws IOException, DuplicateModelNameException{
 
         Transport transport = null;
-        Scanner scanner = new Scanner(in.toString());
-
+        Scanner scanner = new Scanner(in);
 
         switch (scanner.nextLine()){
             case "Auto":
@@ -176,16 +163,28 @@ public class Transports {
             case "Motorbike":
                 transport = new Motorbike(scanner.nextLine());
                 break;
+            case "Scooter":
+                transport = new Scooter(scanner.nextLine());
+                break;
+            case "Quadbike":
+                transport = new Quadbike(scanner.nextLine());
+                break;
+            case "Moped":
+                transport = new Moped(scanner.nextLine());
+                break;
+            default:
+                throw new IOException();
         }
 
         int countModels = Integer.parseInt(scanner.nextLine());
 
         for(int i = 0; i < countModels; i++){
             String nameModel = scanner.nextLine();
-            double price = Double.parseDouble(scanner.nextLine());
+            double price = Double.parseDouble(scanner.nextLine().replace(",", "."));
             transport.addModel(nameModel, price);
         }
 
+        scanner.close();
         return transport;
     }
 
@@ -196,21 +195,24 @@ public class Transports {
             Constructor cons = c.getConstructor(new Class[] {String.class, Integer.TYPE});
             Integer count_ = Integer.valueOf(count);
             res = cons.newInstance(brand, count_);
+            return (Transport) res;
         }
-        catch (NoSuchMethodException e) {
-            System.out.println("Метод не найден");
+        catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            return null;
         }
-        catch (IllegalAccessException e) {
-            System.out.println("Метод недоступен");
-        }
-        catch (InvocationTargetException e) {
-            System.out.println("При вызове возникло исключение");
-        }
-        catch (InstantiationException e){
-            System.out.println("Выход за границы массива");
-        }
+    }
 
-        return (Transport) res;
+    public static double getAvaragePriceTransports(Transport ... transports){
+        double summ = 0;
+        int count = 0;
+        for(Transport transport : transports){
+            double[] prices = transport.getPriceModels();
+            for(double price : prices){
+                summ += price;
+                count ++;
+            }
+        }
+        return summ / count;
     }
 
 }

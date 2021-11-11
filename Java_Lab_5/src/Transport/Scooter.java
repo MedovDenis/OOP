@@ -99,13 +99,26 @@ public class Scooter implements Transport {
         }
     }
 
-//    class Model implements Serializable {
-//        String name;
-//        double price;
-//
-//        public Model(String name, double price){
-//            this.name = name;
-//            this.price = price;
-//        }
-//    }
+    public Scooter(String brand){
+        this.brand = brand;
+        models = new HashMap<String, Double>();
+    }
+
+    @Override
+    public String toString(){
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(type);
+        stringBuffer.append('\n');
+        stringBuffer.append(brand);
+
+        String[] names = models.keySet().toArray(new String[0]);
+        Double[] prices = models.values().toArray(new Double[0]);
+        for(int i = 0; i < models.size(); i ++){
+            stringBuffer.append('\n');
+            stringBuffer.append(names[i]);
+            stringBuffer.append('\n');
+            stringBuffer.append(prices[i]);
+        }
+        return stringBuffer.toString();
+    }
 }

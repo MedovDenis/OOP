@@ -100,10 +100,15 @@ public class Moped implements Transport {
         models = new LinkedList<Model>();
 
         for(int i = 0; i < count; i++){
-            String name = "Scooter" + (i + 1);
+            String name = "Moped" + (i + 1);
             double price = 100000 * (i + 1);
             models.add(new Model(name, price));
         }
+    }
+
+    public Moped(String brand){
+        this.brand = brand;
+        models = new LinkedList<Model>();
     }
 
     class Model implements Serializable {
@@ -114,5 +119,21 @@ public class Moped implements Transport {
             this.name = name;
             this.price = price;
         }
+    }
+
+    @Override
+    public String toString(){
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(type);
+        stringBuffer.append('\n');
+        stringBuffer.append(brand);
+
+        for(Model model : models){
+            stringBuffer.append('\n');
+            stringBuffer.append(model.name);
+            stringBuffer.append('\n');
+            stringBuffer.append(model.price);
+        }
+        return stringBuffer.toString();
     }
 }
