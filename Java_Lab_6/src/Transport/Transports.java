@@ -124,32 +124,6 @@ public class Transports {
         printWriter.flush();
     }
 
-//    public static Transport readTransport (Reader in)
-//            throws IOException, DuplicateModelNameException{
-//
-//        Transport transport = null;
-//        BufferedReader bufferedReader = new BufferedReader(in);
-//
-//        switch (bufferedReader.readLine()){
-//            case "Auto":
-//                transport = new Auto(bufferedReader.readLine());
-//                break;
-//            case "Motorbike":
-//                transport = new Motorbike(bufferedReader.readLine());
-//                break;
-//        }
-//
-//        int countModels = Integer.parseInt(bufferedReader.readLine());
-//
-//        for(int i = 0; i < countModels; i++){
-//            String nameModel = bufferedReader.readLine();
-//            double price = Double.parseDouble(bufferedReader.readLine());
-//            transport.addModel(nameModel, price);
-//        }
-//
-//        return transport;
-//    }
-
     public static Transport readTransport (Reader in)
             throws IOException, DuplicateModelNameException{
 
