@@ -14,11 +14,11 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Main {
 
     public static void main (String[] args) throws DuplicateModelNameException {
-        //Task1();
+        Task1();
         //Task2();
         //Task3();
         //Task4();
-        Task5();
+        //Task5();
     }
 
     public static void Task1(){
@@ -90,16 +90,18 @@ public class Main {
 
         for (String f : file){
             Runnable runnable = new RunableReadFile(f, arrayBlockingQueue);
-
             (new Thread(runnable)).start();
+        }
 
+        for (int i = 0; i < file.length; i++){
             Transport transport = null;
             try {
                 transport = (Transport) arrayBlockingQueue.take();
-            } catch (InterruptedException e) {
+                System.out.println(transport.getBrand());
+            }
+            catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println(transport.getBrand());
         }
     }
 
