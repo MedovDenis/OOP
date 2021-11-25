@@ -21,8 +21,10 @@ public class RunableReadFile implements Runnable {
             reader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(reader);
             Transport transport = new Auto(bufferedReader.readLine(), 2);
-            blockingQueue.put(transport);
-        } catch (IOException | InterruptedException e) {
+            //blockingQueue.put(transport);
+            blockingQueue.add(transport);
+        //} catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         finally {

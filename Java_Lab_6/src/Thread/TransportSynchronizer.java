@@ -1,6 +1,6 @@
 package Thread;
 
-import Interface.*;
+import Interface.Transport;
 
 public class TransportSynchronizer {
     private Transport transport;
@@ -12,33 +12,33 @@ public class TransportSynchronizer {
         this.transport = transport;
     }
 
-    public void printPrice() throws InterruptedException {
-        double val = 0;
-        double [] priceModels = transport.getPriceModels();
-
-        synchronized(lock) {
+    public double printPrice() throws InterruptedException {
+        double val;
+        synchronized (lock) {
+            double[] p = transport.getPriceModels();
             if (!canPrintPrice()) throw new InterruptedException();
-            while (!set)
+            while (!set) {
                 lock.wait();
-            System.out.println("Print price: " + priceModels[current]);
+            }
+            val = p[current++];
+            System.out.println("Print price: " + val);
             set = false;
             lock.notifyAll();
-            current += 1;
         }
+        return val;
     }
 
     public void printModel() throws InterruptedException {
-        String [] nameModels = transport.getNameModels();
-
-        synchronized(lock) {
+        synchronized (lock) {
+            String[] s = transport.getNameModels();
             if (!canPrintModel()) throw new InterruptedException();
-            while (set)
+            while (set) {
                 lock.wait();
-            System.out.println("Print model: " + nameModels[current]);
+            }
+            System.out.println("Print model: " + s[current]);
             set = true;
             lock.notifyAll();
         }
-
     }
 
     public boolean canPrintPrice() {
@@ -48,4 +48,6 @@ public class TransportSynchronizer {
     public boolean canPrintModel() {
         return (!set && current < transport.getCountModel()) || (set && current < transport.getCountModel() - 1);
     }
+
 }
+
