@@ -6,8 +6,8 @@ import Transport.Transports;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class RunableReentrantLockPrice implements Runnable {
-    Transport transport;
-    ReentrantLock lock;
+    private Transport transport;
+    private ReentrantLock lock;
 
     public RunableReentrantLockPrice(Transport transport, ReentrantLock lock){
         this.transport = transport;
@@ -15,7 +15,7 @@ public class RunableReentrantLockPrice implements Runnable {
     }
 
     public void run(){
-        assert lock.isHeldByCurrentThread();
+        //assert lock.isHeldByCurrentThread();
         lock.lock();
         try {
             Transports.printPriceModels(transport);

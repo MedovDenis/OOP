@@ -1,7 +1,7 @@
 package Thread;
 
 public class RunnableNames implements Runnable {
-    TransportSynchronizer transportSynchronizer;
+    private TransportSynchronizer transportSynchronizer;
 
     public RunnableNames(TransportSynchronizer transportSynchronizer){
         this.transportSynchronizer = transportSynchronizer;

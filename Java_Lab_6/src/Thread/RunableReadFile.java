@@ -6,8 +6,8 @@ import java.io.*;
 import java.util.concurrent.BlockingQueue;
 
 public class RunableReadFile implements Runnable {
-    String fileName;
-    BlockingQueue blockingQueue;
+    private String fileName;
+    private BlockingQueue blockingQueue;
 
     public RunableReadFile(String fileName, BlockingQueue blockingQueue){
         this.fileName = fileName;

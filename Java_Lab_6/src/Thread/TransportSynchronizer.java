@@ -6,7 +6,7 @@ public class TransportSynchronizer {
     private Transport transport;
     private volatile int current = 0;
     private Object lock = new Object();
-    private boolean set = false;
+    private boolean set = true;
 
     public TransportSynchronizer(Transport transport) {
         this.transport = transport;

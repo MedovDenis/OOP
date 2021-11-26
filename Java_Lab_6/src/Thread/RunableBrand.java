@@ -3,7 +3,7 @@ package Thread;
 import Interface.Transport;
 
 public class RunableBrand implements Runnable {
-    Transport transport;
+    private Transport transport;
 
     public RunableBrand (Transport transport){
         this.transport = transport;

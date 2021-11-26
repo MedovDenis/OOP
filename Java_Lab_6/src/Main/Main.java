@@ -3,10 +3,9 @@ package Main;
 import Exception.*;
 import Thread.*;
 import Transport.*;
-import Interface.Transport;
+import Interface.*;
 
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
@@ -27,8 +26,8 @@ public class Main {
         Thread threadNames = new ThreadNames(auto);
         Thread threadPrice = new ThreadPrice(auto);
 
-        threadNames.setPriority(10);
-        threadPrice.setPriority(2);
+        threadNames.setPriority(Thread.MAX_PRIORITY);
+        threadPrice.setPriority(Thread.MIN_PRIORITY);
 
         threadNames.start();
         threadPrice.start();
@@ -76,16 +75,16 @@ public class Main {
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
-        pool.execute(runnableAuto);
-        pool.execute(runnableMotorbike);
-        pool.execute(runnableScooter);
-        pool.execute(runnableMoped);
+        pool.submit(runnableAuto);
+        pool.submit(runnableMotorbike);
+        pool.submit(runnableScooter);
+        pool.submit(runnableMoped);
 
         pool.shutdown();
     }
 
     public static void Task5(){
-        String[] file = { "auto1.txt", "auto2.txt", "auto3.txt", "auto4.txt", "auto5.txt"};
+        String[] file = {"auto1.txt", "auto2.txt", "auto3.txt", "auto4.txt", "auto5.txt"};
         ArrayBlockingQueue<Transport> arrayBlockingQueue = new ArrayBlockingQueue<Transport>(1);
 
         for (String f : file){
