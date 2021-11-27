@@ -6,9 +6,8 @@ import Transport.*;
 import java.io.*;
 import java.net.*;
 
-public class ServerSerial {
+public class Server {
     public static void main(String[] args) {
-
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(4444);
@@ -52,4 +51,5 @@ public class ServerSerial {
             e.printStackTrace();
         }
     }
+
 }
