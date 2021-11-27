@@ -6,12 +6,16 @@ import Transport.*;
 import java.io.*;
 import java.net.*;
 
-public class Server {
-    public static void main(String[] args) {
-        try {
-            ServerSocket serverSocket = new ServerSocket(4444);
-            Socket clientSocket = serverSocket.accept();
+public class ClientHandler implements Runnable {
+    private Socket clientSocket;
 
+    public ClientHandler(Socket clientSocket){
+        this.clientSocket = clientSocket;
+        System.out.println("Client connected!!!");
+    }
+
+    public void run(){
+        try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 
@@ -27,10 +31,9 @@ public class Server {
             out.close();
             in.close();
             clientSocket.close();
-
+            System.out.println("Client disconnected!!!");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }
