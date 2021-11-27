@@ -8,7 +8,7 @@ public class Client {
         Socket echoSocket = null;
         PrintWriter out = null;
         BufferedReader in = null;
-        InetAddress host = InetAddress.getLocalHost();
+        InetAddress host = InetAddress.getByName("192.168.0.103");
 
         try {
             echoSocket = new Socket(host, 7);
@@ -22,6 +22,8 @@ public class Client {
             System.err.printf("Couldn't get I/O for the connection to: %s%n", host.getHostAddress());
             System.exit(1);
         }
+
+        System.out.println("Connected");
 
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         String userInput;
