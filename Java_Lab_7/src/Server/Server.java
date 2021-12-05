@@ -10,8 +10,8 @@ import java.util.concurrent.Executors;
 
 public class Server {
     public static void main(String[] args) {
-        SingleThreadServer();
-        //MultiThreadServer();
+        // SingleThreadServer();
+        MultiThreadServer();
     }
 
     public static void SingleThreadServer (){
@@ -36,9 +36,8 @@ public class Server {
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                 ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 
-                Transport[] transports = new Transport[0];
                 try {
-                    transports = (Transport[]) in.readObject();
+                    Transport[] transports = (Transport[]) in.readObject();
                     double avg = Transports.getAvaragePriceTransports(transports);
                     out.println(avg);
                 } catch (ClassNotFoundException e) {
