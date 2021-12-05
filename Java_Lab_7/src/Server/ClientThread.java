@@ -6,16 +6,16 @@ import Transport.*;
 import java.io.*;
 import java.net.*;
 
-public class Client {
-    private static final String hostName = "localhost";
-    private static final int hostPort = 4444;
+public class ClientThread implements Runnable {
+    private String hostName;
+    private int hostPort;
 
-    public static void main(String[] args){
-        // SingleClient();
-        // MultiThreadClient();
+    public ClientThread(String hostName, int hostPort){
+        this.hostName = hostName;
+        this.hostPort = hostPort;
     }
 
-    public static void SingleClient(){
+    public void run(){
         Socket echoSocket = null;
         ObjectOutputStream out = null;
         BufferedReader in = null;
@@ -41,14 +41,7 @@ public class Client {
         }
         catch (IOException e){
             e.printStackTrace();
-        }
-    }
 
-    public static void MultiThreadClient(){
-        for (int i = 0; i < 10; i++){
-            Runnable client = new ClientThread(hostName, hostPort);
-            Thread threadClient = new Thread(client);
-            threadClient.start();
         }
     }
 }

@@ -11,29 +11,36 @@ public class ClientHandler implements Runnable {
 
     public ClientHandler(Socket clientSocket){
         this.clientSocket = clientSocket;
-        System.out.println("Client connected!!!");
+        System.out.println("Client connected");
     }
 
     public void run(){
+        PrintWriter out = null;
+        ObjectInputStream in = null;
         try {
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            in = new ObjectInputStream(clientSocket.getInputStream());
 
-            Transport[] transports = new Transport[0];
-            try {
-                transports = (Transport[]) in.readObject();
-                double avg = Transports.getAvaragePriceTransports(transports);
-                out.println(avg);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            Transport[] transports = (Transport[]) in.readObject();
+            double avg = Transports.getAvaragePriceTransports(transports);
+            out.println(avg);
 
             out.close();
             in.close();
             clientSocket.close();
-            System.out.println("Client disconnected!!!");
-        } catch (IOException e) {
+            System.out.println("Client disconnected");
+
+        } catch (ClassNotFoundException | IOException e ) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                out.close();
+                in.close();
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
