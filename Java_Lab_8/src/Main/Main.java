@@ -20,10 +20,9 @@ public class Main extends Application {
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
-
-        stage.setTitle("Hello JavaFX");
-        stage.setWidth(250);
-        stage.setHeight(200);
+        stage.setTitle("Calculate");
+        stage.setWidth(270);
+        stage.setHeight(270);
 
         stage.show();
     }
