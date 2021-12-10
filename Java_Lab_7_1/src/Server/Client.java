@@ -7,36 +7,48 @@ import java.io.*;
 import java.net.*;
 
 public class Client {
-    public static void main(String[] args) throws IOException {
+    private static final String hostName = "192.168.0.103";
+    private static final int hostPort = 4444;
+
+    public static void main(String[] args){
+        // SingleClient();
+        MultiThreadClient();
+    }
+
+    public static void SingleClient(){
         Socket echoSocket = null;
         ObjectOutputStream out = null;
         BufferedReader in = null;
-        InetAddress host = InetAddress.getByName("localhost");
 
-        try {
-            echoSocket = new Socket(host, 4444);
+        try{
+            InetAddress host = InetAddress.getByName(hostName);
+            echoSocket = new Socket(host, hostPort);
             out = new ObjectOutputStream(echoSocket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-        } catch (UnknownHostException e) {
-            System.err.printf("Don't know about host: %s%n", host.getHostAddress());
-            System.exit(1);
+
+            Transport[] transports = {
+                    new Auto("Kia", 2),
+                    new Motorbike("BMW", 2),
+                    new Moped("Joker", 2),
+            };
+
+            out.writeObject(transports);
+            System.out.println("echo: " + in.readLine());
+
+            out.close();
+            in.close();
+            echoSocket.close();
         }
-        catch (IOException e) {
-            System.err.printf("Couldn't get I/O for the connection to: %s%n", host.getHostAddress());
-            System.exit(1);
+        catch (IOException e){
+            e.printStackTrace();
         }
+    }
 
-        Transport[] transports = {
-                new Auto("Kia", 2),
-                new Motorbike("BMW", 2),
-                new Moped("Joker", 2),
-        };
-
-        out.writeObject(transports);
-        System.out.println("echo: " + in.readLine());
-
-        out.close();
-        in.close();
-        echoSocket.close();
+    public static void MultiThreadClient(){
+        for (int i = 0; i < 10; i++){
+            Runnable client = new ClientThread(hostName, hostPort);
+            Thread threadClient = new Thread(client);
+            threadClient.start();
+        }
     }
 }

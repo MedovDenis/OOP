@@ -25,7 +25,7 @@ public class ClientHandler implements Runnable {
             double avg = Transports.getAvaragePriceTransports(transports);
             out.println(avg);
 
-            out.close();
+            out.flush();
             in.close();
             clientSocket.close();
             System.out.println("Client disconnected");
@@ -35,7 +35,7 @@ public class ClientHandler implements Runnable {
         }
         finally {
             try {
-                out.close();
+                out.flush();
                 in.close();
                 clientSocket.close();
             } catch (IOException e) {

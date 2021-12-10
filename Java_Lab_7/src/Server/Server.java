@@ -59,7 +59,6 @@ public class Server {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             ServerSocket serverSocket = new ServerSocket(4444);
-            ExecutorService pool = Executors.newFixedThreadPool(2);
 
             while (!serverSocket.isClosed()){
                 if (br.ready()){
@@ -74,9 +73,9 @@ public class Server {
 
                 Socket clientSocket = serverSocket.accept();
                 Runnable clientHandler = new ClientHandler(clientSocket);
-                pool.execute(clientHandler);
+                Thread threadClient = new Thread(clientHandler);
+                threadClient.start();
             }
-            pool.shutdown();
         } catch (IOException e) {
             e.printStackTrace();
         }

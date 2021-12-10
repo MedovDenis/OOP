@@ -5,18 +5,28 @@ import Transport.*;
 
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
+
+    private static final int hostPort = 4450;
     public static void main(String[] args) {
+        //SingleThreadServer();
+        MultiThreadServer();
+    }
+
+    public static void SingleThreadServer (){
+        System.out.println("Start Server");
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            ServerSocket serverSocket = new ServerSocket(4444);
+            ServerSocket serverSocket = new ServerSocket(hostPort);
 
             while (!serverSocket.isClosed()){
                 if (br.ready()){
-                    System.out.println("Hay");
+                    System.out.println("Quit!!!");
                     String serverCommand = br.readLine();
-                    if (serverCommand.equalsIgnoreCase("quit")) {
+                    if (serverCommand.equals("quit")) {
                         serverSocket.close();
                         br.close();
                         break;
@@ -29,9 +39,8 @@ public class Server {
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                 ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 
-                Transport[] transports = new Transport[0];
                 try {
-                    transports = (Transport[]) in.readObject();
+                    Transport[] transports = (Transport[]) in.readObject();
                     double avg = Transports.getAvaragePriceTransports(transports);
                     out.println(avg);
                 } catch (ClassNotFoundException e) {
@@ -39,7 +48,7 @@ public class Server {
                 }
 
                 System.out.println("Disconnected");
-                out.close();
+                out.flush();
                 in.close();
                 clientSocket.close();
             }
@@ -49,4 +58,30 @@ public class Server {
         }
     }
 
+    public static void MultiThreadServer (){
+        System.out.println("Start Server");
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            ServerSocket serverSocket = new ServerSocket(hostPort);
+
+            while (!serverSocket.isClosed()){
+                if (br.ready()){
+                    System.out.println("Quit!!!");
+                    String serverCommand = br.readLine();
+                    if (serverCommand.equals("quit")) {
+                        serverSocket.close();
+                        br.close();
+                        break;
+                    }
+                }
+
+                Socket clientSocket = serverSocket.accept();
+                Runnable clientHandler = new ClientHandler(clientSocket);
+                Thread threadClient = new Thread(clientHandler);
+                threadClient.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

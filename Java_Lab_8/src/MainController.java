@@ -121,7 +121,7 @@ public class MainController {
     @FXML
     private void btnClickDel(ActionEvent event) {
         double number = getNumber(tfResult.getText());
-        if (number != Double.NaN && number != 0) {
+        if (number != Double.NaN) {
             if (stateOperation != StateOperation.StateNone) tfResult.setText(String.valueOf(calcValue(number)));
             stateOperation = StateOperation.StateDel;
         }
@@ -173,8 +173,23 @@ public class MainController {
     private double getNumber (String number){
         double result = Double.NaN;
         if (isNumber(number)){
-            number = number.replace("...", ".").replace("..", ".").replace("...", ".").replace("..", ".");
-            result = Double.parseDouble(number);
+            boolean dot = false;
+            char[] stringBuffer = new char[number.length()];
+            int i = 0;
+            for(Character symbol : number.toCharArray()){
+                if (symbol.equals('.')){
+                    if (!dot) {
+                        stringBuffer[i] = symbol;
+                        dot = true;
+                        i ++;
+                    }
+                }
+                else{
+                    stringBuffer[i] = (symbol);
+                    i++;
+                }
+            }
+            result = Double.parseDouble(new String(stringBuffer));
         }
         return result;
     }
@@ -200,7 +215,7 @@ public class MainController {
                 result =  oldNumber * number;
                 break;
             case StateDel:
-                result =  oldNumber / number;
+                if (number != 0) result =  oldNumber / number;
                 break;
             case StatePow:
                 result =  Math.pow(oldNumber, number);

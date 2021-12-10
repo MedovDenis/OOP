@@ -8,11 +8,11 @@ import java.net.*;
 
 public class Client {
     private static final String hostName = "localhost";
-    private static final int hostPort = 4444;
+    private static final int hostPort = 4450;
 
     public static void main(String[] args){
-        // SingleClient();
-        // MultiThreadClient();
+        //SingleClient();
+        MultiThreadClient();
     }
 
     public static void SingleClient(){
@@ -35,7 +35,7 @@ public class Client {
             out.writeObject(transports);
             System.out.println("echo: " + in.readLine());
 
-            out.close();
+            out.flush();
             in.close();
             echoSocket.close();
         }
