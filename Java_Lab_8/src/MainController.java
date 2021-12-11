@@ -3,27 +3,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
+
 public class MainController {
-    @FXML
-    private Button btnEquals;
-    @FXML
-    private Button btnPlus;
-    @FXML
-    private Button btnMinus;
-    @FXML
-    private Button btnMul;
-    @FXML
-    private Button btnDel;
-    @FXML
-    private Button btnDot;
-    @FXML
-    private Button btnCHS;
-    @FXML
-    private Button btnPow;
-    @FXML
-    private Button btnSqrt;
-    @FXML
-    private Button btnCE;
     @FXML
     private TextField tfResult;
     private enum StateOperation{ StateNone, StatePlus, StateMinus, StateMul, StateDel, StatePow, StateSqrt }
@@ -35,195 +17,138 @@ public class MainController {
     }
 
     @FXML
-    private void btnClickNumber(ActionEvent event) {
+    public void btnClick(ActionEvent event) throws IOException {
         Object obj = event.getSource();
-        if (obj instanceof Button btn){
-            if (!stateInput) {
-                String number = btn.getText();
-                tfResult.setText(number);
-                stateInput = true;
-            }
-            else  tfResult.setText(tfResult.getText() + btn.getText());
+        if (!(obj instanceof Button btn)) throw new IOException();
+
+        String btnType = btn.getText();
+        switch (btnType){
+            case "+":
+                inputOperation(StateOperation.StatePlus);
+                break;
+            case "-":
+                if (!stateInput){
+                    tfResult.setText("-");
+                    stateInput = true;
+                }
+                else inputOperation(StateOperation.StateMinus);
+                break;
+            case "*":
+                inputOperation(StateOperation.StateMul);
+                break;
+            case "/":
+                inputOperation(StateOperation.StateDel);
+                break;
+            case "pow":
+                inputOperation(StateOperation.StatePow);
+                break;
+            case "sqrt":
+                inputOperation(StateOperation.StateSqrt);
+                break;
+            case "CE":
+                stateOperation = StateOperation.StateNone;
+                stateInput = false;
+                oldNumber = 0;
+                tfResult.setText("0");
+                break;
+            case "=":
+                String number = tfResult.getText();
+                if (isNumber(number))
+                    tfResult.setText(calcValue(number));
+                else {
+                    stateOperation = StateOperation.StateNone;
+                    tfResult.setText("Error");
+                }
+                stateInput = false;
+                break;
+            case ".":
+                if (!stateInput) {
+                    tfResult.setText("0.");
+                    stateInput = true;
+                }
+                else tfResult.setText(tfResult.getText() + ".");
+                break;
+            default:
+                if (btnType.length() == 1 && Character.isDigit(btnType.charAt(0)))
+                    inputNumber(btnType);
+                else
+                    tfResult.setText("Error");
+                break;
         }
     }
 
-    @FXML
-    private void btnClickCHS(ActionEvent event) {
-        String number = tfResult.getText();
-        if (number.charAt(0) != '-') tfResult.setText("-" + number);
-        else tfResult.setText(number.replace("-", ""));
-
-    }
-
-    @FXML
-    private void btnClickDot(ActionEvent event) {
-        String result = tfResult.getText() + ".";
-        tfResult.setText(result);
-    }
-
-    @FXML
-    private void btnClickPlus(ActionEvent event) {
-        double number = getNumber(tfResult.getText());
-        if (number != Double.NaN) {
-            if (stateOperation != StateOperation.StateNone) tfResult.setText(String.valueOf(calcValue(number)));
-            stateOperation = StateOperation.StatePlus;
-        }
-        else {
-            tfResult.setText("Error");
-        }
-        oldNumber = Double.parseDouble(tfResult.getText());
-        stateInput = false;
-    }
-
-    @FXML
-    private void btnClickMinus(ActionEvent event) {
-        if (stateInput){
-            double number = getNumber(tfResult.getText());
-            if (number != Double.NaN) {
-                if (stateOperation != StateOperation.StateNone) tfResult.setText(String.valueOf(calcValue(number)));
-                stateOperation = StateOperation.StateMinus;
-            }
-            else {
-                tfResult.setText("Error");
-            }
-            oldNumber = Double.parseDouble(tfResult.getText());
-            stateInput = false;
-        }
-        else {
-            tfResult.setText("-");
+    private void inputNumber (String digit){
+        if (!stateInput) {
+            tfResult.setText(digit);
             stateInput = true;
         }
-
+        else tfResult.setText(tfResult.getText() + digit);
     }
 
-    @FXML
-    private void btnClickEquels(ActionEvent event) {
-        double number = getNumber(tfResult.getText());
-        tfResult.setText(String.valueOf(calcValue(number)));
-        stateOperation = StateOperation.StateNone;
+    private void inputOperation (StateOperation operation){
+        String number = tfResult.getText();
+        String result = null;
+
+        if (isNumber(number)) {
+            if (stateOperation != StateOperation.StateNone) tfResult.setText(calcValue(number));
+            if (operation == StateOperation.StateSqrt){
+                stateOperation = operation;
+                tfResult.setText(calcValue(number));
+                stateOperation = StateOperation.StateNone;
+            }
+            else stateOperation = operation;
+
+            if (!tfResult.getText().equals("Error"))
+                oldNumber = getNumber(number);
+            else
+                oldNumber = 0;
+        }
+        else tfResult.setText("Error");
+
         stateInput = false;
     }
 
-    @FXML
-    private void btnClickMul(ActionEvent event) {
-        double number = getNumber(tfResult.getText());
-        if (number != Double.NaN) {
-            if (stateOperation != StateOperation.StateNone) tfResult.setText(String.valueOf(calcValue(number)));
-            stateOperation = StateOperation.StateMul;
+    private String calcValue(String number){
+        double num = getNumber(number);
+        switch (stateOperation){
+            case StatePlus:
+                return String.valueOf(oldNumber + num);
+            case StateMinus:
+                return String.valueOf(oldNumber - num);
+            case StateMul:
+                return String.valueOf(oldNumber * num);
+            case StateDel:
+                if (num != 0.0)
+                    return String.valueOf(oldNumber / num);
+                break;
+            case StatePow:
+                return String.valueOf(Math.pow(oldNumber, num));
+            case StateSqrt:
+                if (num >= 0)
+                    return String.valueOf(Math.sqrt(num));
+                break;
         }
-        else {
-            tfResult.setText("Error");
-        }
-        oldNumber = Double.parseDouble(tfResult.getText());
-        stateInput = false;
-    }
-
-    @FXML
-    private void btnClickDel(ActionEvent event) {
-        double number = getNumber(tfResult.getText());
-        if (number != Double.NaN) {
-            if (stateOperation != StateOperation.StateNone) tfResult.setText(String.valueOf(calcValue(number)));
-            stateOperation = StateOperation.StateDel;
-        }
-        else {
-            tfResult.setText("Error");
-        }
-        oldNumber = Double.parseDouble(tfResult.getText());
-        stateInput = false;
-    }
-
-    @FXML
-    private void btnClickPow(ActionEvent event) {
-        double number = getNumber(tfResult.getText());
-        if (number != Double.NaN) {
-            if (stateOperation != StateOperation.StateNone) tfResult.setText(String.valueOf(calcValue(number)));
-            stateOperation = StateOperation.StatePow;
-        }
-        else {
-            tfResult.setText("Error");
-        }
-        oldNumber = Double.parseDouble(tfResult.getText());
-        stateInput = false;
-    }
-
-    @FXML
-    private void btnClickSqrt(ActionEvent event) {
-        double number = getNumber(tfResult.getText());
-        if (number != Double.NaN && number >= 0){
-            if (stateOperation != StateOperation.StateNone) tfResult.setText(String.valueOf(calcValue(number)));
-            stateOperation = StateOperation.StateSqrt;
-            tfResult.setText(String.valueOf(calcValue(number)));
-            stateOperation = StateOperation.StateNone;
-        }
-        else {
-            tfResult.setText("Error");
-        }
-        oldNumber = Double.parseDouble(tfResult.getText());
-        stateInput = false;
-    }
-
-    @FXML
-    private void btnClickCE(ActionEvent event) {
-        stateOperation = StateOperation.StateNone;
-        stateInput = false;
-        oldNumber = 0;
-        tfResult.setText("0");
+        return "Error";
     }
 
     private double getNumber (String number){
-        double result = Double.NaN;
-        if (isNumber(number)){
-            boolean dot = false;
-            char[] stringBuffer = new char[number.length()];
-            int i = 0;
-            for(Character symbol : number.toCharArray()){
-                if (symbol.equals('.')){
-                    if (!dot) {
-                        stringBuffer[i] = symbol;
-                        dot = true;
-                        i ++;
-                    }
-                }
-                else{
-                    stringBuffer[i] = (symbol);
-                    i++;
-                }
+        boolean dot = false;
+        StringBuilder stringBuilder = new StringBuilder();
+        for(char symbol : number.toCharArray()){
+            if (symbol == '.' && !dot){
+                stringBuilder.append(symbol);
+                dot = true;
             }
-            result = Double.parseDouble(new String(stringBuffer));
+            else if (symbol != '.') stringBuilder.append(symbol);
         }
-        return result;
+        return Double.parseDouble(stringBuilder.toString());
     }
 
     private boolean isNumber(String str) {
         if (str == null || str.isEmpty()) return false;
         for (int i = 0; i < str.length(); i++) {
-            if (!(Character.isDigit(str.charAt(i)) || str.charAt(i) == '.')) return false;
+            if (!(Character.isDigit(str.charAt(i)) || str.charAt(i) == '.' || str.charAt(i) == '-' || str.charAt(i) == 'E')) return false;
         }
         return true;
-    }
-
-    private double calcValue(double number){
-        double result = Double.NaN;
-        switch (stateOperation){
-            case StatePlus:
-                result =  oldNumber + number;
-                break;
-            case StateMinus:
-                result =  oldNumber - number;
-                break;
-            case StateMul:
-                result =  oldNumber * number;
-                break;
-            case StateDel:
-                if (number != 0) result =  oldNumber / number;
-                break;
-            case StatePow:
-                result =  Math.pow(oldNumber, number);
-                break;
-            case StateSqrt:
-                result =  Math.sqrt(number);
-                break;
-        }
-        return  result;
     }
 }

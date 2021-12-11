@@ -9,13 +9,11 @@ import javafx.scene.Parent;
 public class Main extends Application {
 
     public static void main(String[] args) {
-
         Application.launch(args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-
         Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
         Scene scene = new Scene(root);
 
