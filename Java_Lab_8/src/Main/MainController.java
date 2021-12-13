@@ -4,6 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 
 public class MainController {
     @FXML
@@ -68,30 +71,51 @@ public class MainController {
 
     @FXML
     public void keyPressed (javafx.scene.input.KeyEvent event){
-        String key = event.getText();
-        if (key.length() == 1){
-            switch (key.charAt(0)){
-                case ('.') -> {
-                    if (!stateInput) {
-                        lbResult.setText("0.");
-                        stateInput = true;
+        if (new KeyCodeCombination(KeyCode.EQUALS, KeyCombination.SHIFT_DOWN).match(event)){
+            inputOperation(StateOperation.StatePlus);
+        }else if (new KeyCodeCombination(KeyCode.DIGIT8, KeyCombination.SHIFT_DOWN).match(event)) {
+            inputOperation(StateOperation.StateMul);
+        }
+        else{
+            String key = event.getText();
+            if (key.length() == 1){
+                switch (key.charAt(0)){
+                    case ('=') -> {
+                        String number = lbResult.getText();
+                        if (isNumber(number))
+                            lbResult.setText(calcValue(number));
+                        else {
+                            stateOperation = StateOperation.StateNone;
+                            lbResult.setText("Error");
+                        }
+                        stateInput = false;
                     }
-                    else lbResult.setText(lbResult.getText() + ".");
-                }
-                case (',') -> {
-                    if (!stateInput) {
-                        lbResult.setText("0,");
-                        stateInput = true;
+                    case ('+') -> {inputOperation(StateOperation.StatePlus);}
+                    case ('*') -> {inputOperation(StateOperation.StateMul);}
+                    case ('/') -> {inputOperation(StateOperation.StateDel);}
+                    case ('.') -> {
+                        if (!stateInput) {
+                            lbResult.setText("0.");
+                            stateInput = true;
+                        }
+                        else lbResult.setText(lbResult.getText() + ".");
                     }
-                    else lbResult.setText(lbResult.getText() + ",");
-                }
-                case ('-') -> {
-                    if (!stateInput){
-                        lbResult.setText("-");
-                        stateInput = true;
+                    case (',') -> {
+                        if (!stateInput) {
+                            lbResult.setText("0,");
+                            stateInput = true;
+                        }
+                        else lbResult.setText(lbResult.getText() + ",");
                     }
+                    case ('-') -> {
+                        if (!stateInput){
+                            lbResult.setText("-");
+                            stateInput = true;
+                        }
+                        else inputOperation(StateOperation.StateMinus);
+                    }
+                    default -> {if(Character.isDigit(key.charAt(0))) inputNumber(key);}
                 }
-                default -> {if(Character.isDigit(key.charAt(0))) inputNumber(key);}
             }
         }
     }
@@ -147,8 +171,8 @@ public class MainController {
 
     private double getNumber (String number){
         boolean dot = false;
-        StringBuilder stringBuilder = new StringBuilder();
         number = number.replace(',', '.');
+        StringBuilder stringBuilder = new StringBuilder();
         for(char symbol : number.toCharArray()){
             if (symbol == '.' && !dot){
                 stringBuilder.append(symbol);
