@@ -14,6 +14,7 @@ public class MainController {
     private enum StateOperation{ StateNone, StatePlus, StateMinus, StateMul, StateDel, StatePow, StateSqrt }
     private StateOperation stateOperation;
     private boolean stateInput = false;
+    private boolean dot = false;
     private double firstNumber = 0;
     {
         stateOperation = StateOperation.StateNone;
@@ -40,6 +41,7 @@ public class MainController {
             case "CE" -> {
                 stateOperation = StateOperation.StateNone;
                 stateInput = false;
+                dot = false;
                 firstNumber = 0;
                 lbResult.setText("0");
             }
@@ -48,17 +50,22 @@ public class MainController {
                 if (isNumber(number))
                     lbResult.setText(calcValue(number));
                 else {
-                    stateOperation = StateOperation.StateNone;
                     lbResult.setText("Error");
                 }
+                stateOperation = StateOperation.StateNone;
                 stateInput = false;
+                dot = false;
             }
             case "." -> {
                 if (!stateInput) {
                     lbResult.setText("0.");
                     stateInput = true;
+                    dot = true;
                 }
-                else lbResult.setText(lbResult.getText() + ".");
+                else if (!dot){
+                    lbResult.setText(lbResult.getText() + ".");
+                    dot = true;
+                }
             }
             default -> {
                 if (btnType.length() == 1 && Character.isDigit(btnType.charAt(0)))
@@ -85,10 +92,11 @@ public class MainController {
                         if (isNumber(number))
                             lbResult.setText(calcValue(number));
                         else {
-                            stateOperation = StateOperation.StateNone;
                             lbResult.setText("Error");
                         }
+                        stateOperation = StateOperation.StateNone;
                         stateInput = false;
+                        dot = false;
                     }
                     case ('+') -> {inputOperation(StateOperation.StatePlus);}
                     case ('*') -> {inputOperation(StateOperation.StateMul);}
@@ -97,15 +105,23 @@ public class MainController {
                         if (!stateInput) {
                             lbResult.setText("0.");
                             stateInput = true;
+                            dot = true;
                         }
-                        else lbResult.setText(lbResult.getText() + ".");
+                        else if (!dot){
+                            lbResult.setText(lbResult.getText() + ".");
+                            dot = true;
+                        }
                     }
                     case (',') -> {
                         if (!stateInput) {
-                            lbResult.setText("0,");
+                            lbResult.setText("0.");
                             stateInput = true;
+                            dot = true;
                         }
-                        else lbResult.setText(lbResult.getText() + ",");
+                        else if (!dot){
+                            lbResult.setText(lbResult.getText() + ",");
+                            dot = true;
+                        }
                     }
                     case ('-') -> {
                         if (!stateInput){
@@ -132,21 +148,35 @@ public class MainController {
         String number = lbResult.getText();
 
         if (isNumber(number)) {
-            if (stateOperation != StateOperation.StateNone) lbResult.setText(calcValue(number));
-            if (operation == StateOperation.StateSqrt){
+            if (stateOperation != StateOperation.StateNone) {
+                lbResult.setText(calcValue(number));
+                stateOperation = operation;
+                if (isNumber(lbResult.getText()))
+                    firstNumber = getNumber(calcValue(number));
+                else
+                    firstNumber = 0;
+            }
+            else if (operation == StateOperation.StateSqrt){
                 stateOperation = operation;
                 lbResult.setText(calcValue(number));
                 stateOperation = StateOperation.StateNone;
+                if (isNumber(lbResult.getText()))
+                    firstNumber = getNumber(calcValue(number));
+                else
+                    firstNumber = 0;
             }
-            else stateOperation = operation;
+            //stateOperation = operation;
 
-            if (!lbResult.getText().equals("Error"))
-                firstNumber = getNumber(number);
-            else
-                firstNumber = 0;
+            //if (isNumber(lbResult.getText()))
+            //    firstNumber = getNumber(number);
+            //else
+            //    firstNumber = 0;
+
+
         }
         else lbResult.setText("Error");
         stateInput = false;
+        dot = false;
     }
 
     private String calcValue(String number){
@@ -158,11 +188,20 @@ public class MainController {
             case StateDel -> {
                 if (secondNumber != 0.0)
                     return String.valueOf(firstNumber / secondNumber);
+                return "Деление на 0";
             }
-            case StatePow -> {return String.valueOf(Math.pow(firstNumber, secondNumber));}
+            case StatePow -> {
+                System.out.println(firstNumber);
+                System.out.println(secondNumber);
+                String result = String.valueOf(Math.pow(firstNumber, secondNumber));
+                if (isNumber(result))
+                    return result;
+                return "Ошибка при возведении в степень";
+                }
             case StateSqrt -> {
-                if (secondNumber >= 0)
+                if (secondNumber > 0)
                     return String.valueOf(Math.sqrt(secondNumber));
+                return "Корень из отрицательного числа";
             }
             case StateNone -> {return String.valueOf(secondNumber);}
         }
@@ -170,17 +209,8 @@ public class MainController {
     }
 
     private double getNumber (String number){
-        boolean dot = false;
         number = number.replace(',', '.');
-        StringBuilder stringBuilder = new StringBuilder();
-        for(char symbol : number.toCharArray()){
-            if (symbol == '.' && !dot){
-                stringBuilder.append(symbol);
-                dot = true;
-            }
-            else if (symbol != '.') stringBuilder.append(symbol);
-        }
-        return Double.parseDouble(stringBuilder.toString());
+        return Double.parseDouble(number);
     }
 
     private boolean isNumber(String str) {
