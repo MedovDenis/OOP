@@ -20,8 +20,10 @@ public class Main extends Application {
 
         stage.setScene(scene);
         stage.setTitle("Calculate");
-        stage.setWidth(270);
-        stage.setHeight(270);
+        stage.setMaxHeight(270);
+        stage.setMaxWidth(270);
+        stage.setMinHeight(270);
+        stage.setMinWidth(270);
 
         stage.show();
     }

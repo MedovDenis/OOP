@@ -3,11 +3,11 @@ package Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 
 public class MainController {
     @FXML
-    private TextField tfResult;
+    private Label lbResult;
     private enum StateOperation{ StateNone, StatePlus, StateMinus, StateMul, StateDel, StatePow, StateSqrt }
     private StateOperation stateOperation;
     private boolean stateInput = false;
@@ -22,142 +22,125 @@ public class MainController {
 
         String btnType = btn.getText();
         switch (btnType){
-            case "+":
-                inputOperation(StateOperation.StatePlus);
-                break;
-            case "-":
+            case "+" -> {inputOperation(StateOperation.StatePlus);}
+            case "-" -> {
                 if (!stateInput){
-                    tfResult.setText("-");
+                    lbResult.setText("-");
                     stateInput = true;
                 }
                 else inputOperation(StateOperation.StateMinus);
-                break;
-            case "*":
-                inputOperation(StateOperation.StateMul);
-                break;
-            case "/":
-                inputOperation(StateOperation.StateDel);
-                break;
-            case "pow":
-                inputOperation(StateOperation.StatePow);
-                break;
-            case "sqrt":
-                inputOperation(StateOperation.StateSqrt);
-                break;
-            case "CE":
+            }
+            case "*" -> {inputOperation(StateOperation.StateMul);}
+            case "/" -> {inputOperation(StateOperation.StateDel);}
+            case "pow" -> {inputOperation(StateOperation.StatePow);}
+            case "sqrt" -> {inputOperation(StateOperation.StateSqrt);}
+            case "CE" -> {
                 stateOperation = StateOperation.StateNone;
                 stateInput = false;
                 firstNumber = 0;
-                tfResult.setText("0");
-                break;
-            case "=":
-                String number = tfResult.getText();
+                lbResult.setText("0");
+            }
+            case "=" -> {
+                String number = lbResult.getText();
                 if (isNumber(number))
-                    tfResult.setText(calcValue(number));
+                    lbResult.setText(calcValue(number));
                 else {
                     stateOperation = StateOperation.StateNone;
-                    tfResult.setText("Error");
+                    lbResult.setText("Error");
                 }
                 stateInput = false;
-                break;
-            case ".":
+            }
+            case "." -> {
                 if (!stateInput) {
-                    tfResult.setText("0.");
+                    lbResult.setText("0.");
                     stateInput = true;
                 }
-                else tfResult.setText(tfResult.getText() + ".");
-                break;
-            default:
+                else lbResult.setText(lbResult.getText() + ".");
+            }
+            default -> {
                 if (btnType.length() == 1 && Character.isDigit(btnType.charAt(0)))
                     inputNumber(btnType);
                 else
-                    tfResult.setText("Error");
-                break;
+                    lbResult.setText("Error");
+            }
         }
     }
 
+    @FXML
     public void keyPressed (javafx.scene.input.KeyEvent event){
         String key = event.getText();
         if (key.length() == 1){
             switch (key.charAt(0)){
-                case ('.'):
+                case ('.') -> {
                     if (!stateInput) {
-                        tfResult.setText("0.");
+                        lbResult.setText("0.");
                         stateInput = true;
                     }
-                    else tfResult.setText(tfResult.getText() + ".");
-                    break;
-                case (','):
+                    else lbResult.setText(lbResult.getText() + ".");
+                }
+                case (',') -> {
                     if (!stateInput) {
-                        tfResult.setText("0,");
+                        lbResult.setText("0,");
                         stateInput = true;
                     }
-                    else tfResult.setText(tfResult.getText() + ",");
-                    break;
-                case ('-'):
+                    else lbResult.setText(lbResult.getText() + ",");
+                }
+                case ('-') -> {
                     if (!stateInput){
-                        tfResult.setText("-");
+                        lbResult.setText("-");
                         stateInput = true;
                     }
-                    break;
-                default:
-                    if(Character.isDigit(key.charAt(0))) inputNumber(key);
-                    break;
+                }
+                default -> {if(Character.isDigit(key.charAt(0))) inputNumber(key);}
             }
         }
     }
 
     private void inputNumber (String digit){
         if (!stateInput) {
-            tfResult.setText(digit);
+            lbResult.setText(digit);
             stateInput = true;
         }
-        else tfResult.setText(tfResult.getText() + digit);
+        else lbResult.setText(lbResult.getText() + digit);
     }
 
     private void inputOperation (StateOperation operation){
-        String number = tfResult.getText();
+        String number = lbResult.getText();
 
         if (isNumber(number)) {
-            if (stateOperation != StateOperation.StateNone) tfResult.setText(calcValue(number));
+            if (stateOperation != StateOperation.StateNone) lbResult.setText(calcValue(number));
             if (operation == StateOperation.StateSqrt){
                 stateOperation = operation;
-                tfResult.setText(calcValue(number));
+                lbResult.setText(calcValue(number));
                 stateOperation = StateOperation.StateNone;
             }
             else stateOperation = operation;
 
-            if (!tfResult.getText().equals("Error"))
+            if (!lbResult.getText().equals("Error"))
                 firstNumber = getNumber(number);
             else
                 firstNumber = 0;
         }
-        else tfResult.setText("Error");
+        else lbResult.setText("Error");
         stateInput = false;
     }
 
     private String calcValue(String number){
         double secondNumber = getNumber(number);
         switch (stateOperation){
-            case StatePlus:
-                return String.valueOf(firstNumber + secondNumber);
-            case StateMinus:
-                return String.valueOf(firstNumber - secondNumber);
-            case StateMul:
-                return String.valueOf(firstNumber * secondNumber);
-            case StateDel:
+            case StatePlus -> {return String.valueOf(firstNumber + secondNumber);}
+            case StateMinus -> {return String.valueOf(firstNumber - secondNumber);}
+            case StateMul -> {return String.valueOf(firstNumber * secondNumber);}
+            case StateDel -> {
                 if (secondNumber != 0.0)
                     return String.valueOf(firstNumber / secondNumber);
-                break;
-            case StatePow:
-                return String.valueOf(Math.pow(firstNumber, secondNumber));
-            case StateSqrt:
+            }
+            case StatePow -> {return String.valueOf(Math.pow(firstNumber, secondNumber));}
+            case StateSqrt -> {
                 if (secondNumber >= 0)
                     return String.valueOf(Math.sqrt(secondNumber));
-                break;
-            case StateNone:
-                return String.valueOf(secondNumber);
-
+            }
+            case StateNone -> {return String.valueOf(secondNumber);}
         }
         return "Error";
     }
@@ -179,7 +162,7 @@ public class MainController {
     private boolean isNumber(String str) {
         if (str == null || str.isEmpty()) return false;
         for (int i = 0; i < str.length(); i++) {
-            if (!(Character.isDigit(str.charAt(i)) || str.charAt(i) == '.' || str.charAt(i) == ',' || str.charAt(i) == '-' || str.charAt(i) == 'E')) return false;
+            if (!(Character.isDigit(str.charAt(i)) || str.charAt(i) == '.' || str.charAt(i) == ',' || (str.charAt(i) == '-' && str.length() > 1) || str.charAt(i) == 'E')) return false;
         }
         return true;
     }
