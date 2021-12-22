@@ -9,9 +9,12 @@ public class Calculator {
 
     public static String calculated (String btnValue, String number){
         String result;
-
         switch (btnValue){
+            case "sqrt" -> result = inputOperation(StateOperation.StateSqrt, number);
+            case "pow" -> result = inputOperation(StateOperation.StatePow, number);
             case "+" -> result = inputOperation(StateOperation.StatePlus, number);
+            case "*" -> result = inputOperation(StateOperation.StateMul, number);
+            case "/" -> result = inputOperation(StateOperation.StateDel, number);
             case "-" -> {
                 if (!stateInput){
                     stateInput = true;
@@ -19,12 +22,18 @@ public class Calculator {
                 }
                 else result = inputOperation(StateOperation.StateMinus, number);
             }
-            case "*" -> result = inputOperation(StateOperation.StateMul, number);
-
-            case "/" -> result = inputOperation(StateOperation.StateDel, number);
-
-            case "pow" -> result = inputOperation(StateOperation.StatePow, number);
-            case "sqrt" -> result = inputOperation(StateOperation.StateSqrt, number);
+            case "del" -> {
+                if (number.length() > 1 && isNumber(number)) {
+                    if (number.endsWith("."))
+                        dot = false;
+                    result = number.substring(0, number.length() - 1);
+                }
+                else {
+                    result = "0";
+                    stateInput = false;
+                    dot = false;
+                }
+            }
             case "CE" -> {
                 stateOperation = StateOperation.StateNone;
                 stateInput = false;
@@ -58,7 +67,7 @@ public class Calculator {
                 if (btnValue.length() == 1 && Character.isDigit(btnValue.charAt(0)))
                     result = inputNumber(btnValue, number);
                 else
-                    result = "Error";
+                    result = number;
             }
         }
 
@@ -79,29 +88,43 @@ public class Calculator {
             if (stateOperation != StateOperation.StateNone) {
                 result = calcValue(number);
 
-                if (isNumber(result)){
-                    firstNumber = getNumber(calcValue(number));
-                    stateOperation = operation;
-                }
-                else{
+                if (isNumber(result)) {
+                    if (operation == StateOperation.StateSqrt){
+                        stateOperation = operation;
+                        result = calcValue(result);
+                        stateOperation = StateOperation.StateNone;
+
+                        if (isNumber(result))
+                            firstNumber = getNumber(result);
+                        else
+                            firstNumber = 0;
+                    }
+                    else{
+                        firstNumber = getNumber(result);
+                        stateOperation = operation;
+                    }
+
+                } else {
                     firstNumber = 0;
                     stateOperation = StateOperation.StateNone;
                 }
             }
-            else if (operation == StateOperation.StateSqrt){
-                stateOperation = operation;
-                result = calcValue(number);
-                stateOperation = StateOperation.StateNone;
-
-                if (isNumber(result))
-                    firstNumber = getNumber(calcValue(number));
-                else
-                    firstNumber = 0;
-            }
             else{
-                stateOperation = operation;
-                firstNumber = getNumber(number);
-                result = number;
+                if (operation == StateOperation.StateSqrt){
+                    stateOperation = operation;
+                    result = calcValue(number);
+                    stateOperation = StateOperation.StateNone;
+
+                    if (isNumber(result))
+                        firstNumber = getNumber(result);
+                    else
+                        firstNumber = 0;
+                }
+                else {
+                    stateOperation = operation;
+                    firstNumber = getNumber(number);
+                    result = number;
+                }
             }
         }
         else {
@@ -117,26 +140,26 @@ public class Calculator {
     private static String calcValue(String number){
         double secondNumber = getNumber(number);
         switch (stateOperation){
-            case StatePlus -> {return String.valueOf(firstNumber + secondNumber);}
-            case StateMinus -> {return String.valueOf(firstNumber - secondNumber);}
-            case StateMul -> {return String.valueOf(firstNumber * secondNumber);}
-            case StateDel -> {
+            case StatePlus: return String.valueOf(firstNumber + secondNumber);
+            case StateMinus: return String.valueOf(firstNumber - secondNumber);
+            case StateMul: return String.valueOf(firstNumber * secondNumber);
+            case StateDel: {
                 if (secondNumber != 0.0)
                     return String.valueOf(firstNumber / secondNumber);
                 return "Деление на 0";
             }
-            case StatePow -> {
+            case StatePow: {
                 String result = String.valueOf(Math.pow(firstNumber, secondNumber));
                 if (isNumber(result))
                     return result;
                 return "Ошибка при возведении в степень";
             }
-            case StateSqrt -> {
+            case StateSqrt: {
                 if (secondNumber > 0)
                     return String.valueOf(Math.sqrt(secondNumber));
                 return "Корень из отрицательного числа";
             }
-            case StateNone -> {return String.valueOf(secondNumber);}
+            case StateNone: return String.valueOf(secondNumber);
         }
         return "Error";
     }

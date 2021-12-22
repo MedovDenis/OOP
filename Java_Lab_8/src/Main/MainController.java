@@ -29,6 +29,9 @@ public class MainController {
         else if (new KeyCodeCombination(KeyCode.DIGIT8, KeyCombination.SHIFT_DOWN).match(event)) {
             lbResult.setText(Calculator.calculated("*", number));
         }
+        else if (new KeyCodeCombination(KeyCode.BACK_SPACE).match(event)) {
+            lbResult.setText(Calculator.calculated("del", number));
+        }
         else{
             String key = event.getText();
             lbResult.setText(Calculator.calculated(key, number));
